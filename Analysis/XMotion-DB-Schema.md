@@ -399,4 +399,26 @@ the scoring and format triggers lives in **`AI Skills\XMotion-Automated-Tracking
 
 ---
 
+## 10. Extension — 2026-07-03 (sourcing metrics, Collin directive)
+
+**Live in `_Tools\xmotion_db.py` via `MIGRATIONS`; first populated by
+`_Tools\xmotion_write_2026-07-03_austin.py` (first live sourcing batch, Austin TX).**
+
+### 10.1 New columns on `listings`
+
+| Column | Type | Meaning |
+|---|---|---|
+| `price_per_night` | REAL | Airbnb trip price per night incl. fees (USD) at sourcing time |
+| `rating` | REAL | listing star rating at sourcing time, e.g. 4.98 |
+| `reviews_n` | INTEGER | review count at sourcing time |
+
+Captured at T1 (listing start) when available; backfill permitted as a last-line
+correction if sourced after insert. These are candidate predictors for the
+Segment-9 prediction model (owner responsiveness / listing maturity signals)
+alongside `images_n`, flow read, and `market_tier`.
+
+*Extension recorded — WIZX (Operational & Protocol Leader).*
+
+---
+
 *Signed — wiz-4 (Head of Development). Schema is buildable as written; §7 turns it into a live DB on command.*
