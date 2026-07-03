@@ -27,24 +27,36 @@ slow [MOVE] , eye-level, smooth steady motion, [LIGHT], photorealistic, stable g
 Camera-first: describe the move, never the scene — the photo is the scene.
 Guardrail suffix is mandatory on every clip.
 
-## Batch 1 — six parallel clips
+## Batch 1 — six parallel clips (FINAL — locked after full-set CS scout, 7 sheets / 55 frames)
 
 | Clip | Frame | Room / Shot | Preset | Prompt | Result | Notes |
 |---|---|---|---|---|---|---|
-| 1 | 010.png | King bedroom (baseline) | Dolly In | slow dolly-in toward the made bed, eye-level, smooth steady gimbal, soft window light, calm steady motion, photorealistic, stable geometry, no warping, no morphing | pending | Cleanest interior — baseline test |
-| 2 | 005.png | Living → dining sight line | FPV Drone | slow FPV glide forward through the living room toward the dining area, continuous flowing motion, eye-level, bright natural light, photorealistic, stable geometry, no warping, no morphing | pending | Highest-value clip; probable final-cut opener. Watch TV screen shimmer |
-| 3 | TBD (kitchen, ~007–016) | Kitchen | 360 Orbit | gentle orbit past the counter and cabinetry, bright even lighting, premium finish, steady cinematic motion, photorealistic, stable geometry, no warping, no morphing | pending | Frame number: Collin's call (thumbnail reads flaked mid-scout) |
-| 4 | 055.png | Flamingo pool → path → house | Dolly In | slow dolly forward along the stone path toward the house, eye-level, smooth steady motion, warm natural light, photorealistic, stable geometry, no warping, no morphing | pending | Personality/establishing shot; New-Listing X-Factor face. Float must drift, not morph |
-| 5 | 030.png | Twin-queen boho bedroom | Dolly In | slow dolly-in toward the two beds, eye-level, smooth steady gimbal, soft natural light, calm steady motion, photorealistic, stable geometry, no warping, no morphing | pending | Deliberate mirror probe (arched floor mirror, left edge) — learning clip |
-| 6 | 048.png | Hot tub → yard beyond | Handheld (slow pan) | slow pan across the hot tub water toward the garden seating beyond, gentle steady motion, soft dappled daylight, photorealistic, stable geometry, no warping, no morphing | pending | Water surface = legitimate motion subject; ripples sell realism |
+| 1 | 042.png | Approach — stone path to house | Dolly In | slow dolly forward along the stone path toward the house, eye-level, smooth steady motion, soft dappled daylight, photorealistic, stable geometry, no warping, no morphing | pending | Montage opener; forward-to-house direction |
+| 2 | 005.png | Living → dining sight line | FPV Drone | slow FPV glide forward through the living room toward the dining area, continuous flowing motion, eye-level, bright natural light, photorealistic, stable geometry, no warping, no morphing | pending | Watch TV screen shimmer (edge of frame) |
+| 3 | 034.png | Kitchen | 360 Orbit | gentle orbit past the counter and cabinetry, bright even lighting, premium finish, steady cinematic motion, photorealistic, stable geometry, no warping, no morphing | pending | Kitchen-dominant frame; 016 is alternate |
+| 4 | 010.png | King bedroom (baseline) | Dolly In | slow dolly-in toward the made bed, eye-level, smooth steady gimbal, soft window light, calm steady motion, photorealistic, stable geometry, no warping, no morphing | pending | Cleanest interior — template baseline |
+| 5 | 048.png | Hot tub — water beat | Handheld (slow pan) | slow pan across the hot tub water toward the patio dining beyond, gentle steady motion, soft daylight, photorealistic, stable geometry, no warping, no morphing | pending | Water micro-motion sells realism |
+| 6 | 053.png | Dusk closer — lit house + steps | Dolly In | slow dolly forward toward the stone steps and the glowing lit house, eye-level, smooth steady motion, warm evening light, photorealistic, stable geometry, no warping, no morphing | pending | Best frame in gallery; string lights = thin-line watch |
+
+**Montage map:** 042 → 005 → 034 → 010 → 048 → 053. Forward momentum on every cut
+(approach → through the door → into the home → out to the amenity); light arcs
+day → dusk ("arrive in daylight, stay into the evening").
+
+**Full-set scout findings (2026-07-03, CS sheets):** no flamingo-free pool frame
+exists — pool beat dropped, hot tub is the water beat. Two light regimes (day +
+dedicated twilight set 012/013/051/053/054) — twilight shoot = invested-host
+signal, X-Factor candidate. Five sleeping spaces (king, slat-wall queen, iron-bed,
+twin-queen boho, bunk room) — market as group/family property. Arch mirror in
+011/030/031/035 (avoided); glossy closets 020 (avoided); Universal TV splash in
+multiple living frames.
 
 **Batch cost estimate:** ~36 credits (6 clips × ~6 credits, Kling 3.0).
 
 ## Bench (batch 2 candidates)
 
-006 (living reverse angle, Dolly Out reveal) · 004 (fire-pit circle, Crane Up over
-yard/deck/hammock) · 002 (hot tub + facade) · 040 (stock-tank close) · bathroom
-coverage — rescout pending.
+001/044/047 (deck day + golden hour) · 030 (mirror probe — deferred experiment) ·
+016 (dining→kitchen w/ slider) · 013/051 (dusk hot tub, purple LED) · 054 (dusk
+yard+hammock) · 036 (bunk room, group-capacity beat) · baths 021/025/027.
 
 ## Review checklist (fills Ⲱ on render)
 
