@@ -1,18 +1,18 @@
 ---
-title: XMotion — Week 1 Quick Start Guide
+name: XMotion Quick Start
+description: Week 1 workstation setup and Airbnb sourcing/scoring workflow for new XMotion virtual assistants. Covers installs, Windows MCP, XCopy capture tool, Obsidian vault, Outlook, two‑loop property evaluation, and Claude‑guided scoring. Non‑technical audience — every step runs through Claude.
+tools: windows-mcp, filesystem, memory, sequential-thinking
 type: onboarding
-audience: new-va
-status: active
+domain: va-training
+status: live
 version: 1.0
-updated: 2026-06-27
-tags: [xmotion, onboarding, setup, week-1, workstation]
-author: Collin
-name: XMotion Week 1 Onboarding
-description: Week-1 workstation setup track for new VAs. Use when onboarding a new team member, walking through app or MCP installation, fixing a config issue, or re-verifying a VA workstation. Trigger on setup, onboarding, week 1, install, config, MCP, or a VA first session. Covers core app installs, team accounts, windows-mcp keystone setup, the C:/dev/XMotion workspace, Obsidian vault, the XCopy capture tool, filesystem access, and the sourcing and scoring loops.
+updated: 2026-07-03
+audience: XMotion VAs (Jaisa & Richlan)
+maintainer: XMotion
+signed: Collin 
 growth:
-  - Week 2 production guide: first generation session with Higgsfield
-  - Fold in the VA capture-location decision once resolved (VPS vs local, D-2)
-  - Move shared credentials out of this doc to a secure channel before any repo sync
+  - Add video generation loop once Higgsfield integration is stable
+  - Build automated S‑value rotation and conversion tracking per the analytics pipeline
 ---
 
 # XMotion — Week 1 Quick Start Guide
