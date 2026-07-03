@@ -219,7 +219,7 @@ py XCopy.py -5
 
 - Line 1 moves into the tools folder.
 - Line 2 installs `pillow` (an image library the tool needs).
-- Line 3 launches XCopy.
+- Line 3 launches XCopy with a 5 minute capture window.
 
 If anything errors, copy the red text, paste it to Claude, and ask it to fix it. (The full capture how-to is in `Onboarding/03_Capture_Guide.md` — this is just to confirm the tool runs.)
 
