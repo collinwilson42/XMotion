@@ -1,4 +1,4 @@
-﻿---
+---
 title: XMotion — Week 1 Quick Start Guide
 type: onboarding
 audience: new-va
