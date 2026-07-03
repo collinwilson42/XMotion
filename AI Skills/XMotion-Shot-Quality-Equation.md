@@ -101,29 +101,29 @@ discrimination at the dangerous end, where a linear scale would collapse.
 
 ## Denominator — SD (the photos; the Claude account judges per block)
 
-### Ambiguity — doubling scale (1, 2, 4, 8, 16)
+### Ambiguity — linear scale (1-10)
 
 Sequencing / interpretive uncertainty for a coherent walkthrough.
 
-| Level | Weight | Meaning |
-|-------|:------:|---------|
-| Unambiguous | **1** | Clear room-by-room set, single subject (the unit), readable spatial flow |
-| Minor | **2** | A couple of redundant angles or one stray shot |
-| Moderate | **4** | Mixed clusters needing segmentation (unit vs. amenity), redundant duplicate angles, or unclear room function |
-| Heavy | **8** | Many occluded/cluttered/mirror shots, rooms hard to tell apart, conflicting layouts |
-| Uninterpretable | **16** | The space cannot be reconstructed; the model will hallucinate |
+| Level           | Weight | Meaning                                                                                                      |
+| --------------- | :----: | ------------------------------------------------------------------------------------------------------------ |
+| Unambiguous     | **1**  | Clear room-by-room set, single subject (the unit), readable spatial flow                                     |
+| Minor           |   3    | A couple of redundant angles or one stray shot                                                               |
+| Moderate        |   5    | Mixed clusters needing segmentation (unit vs. amenity), redundant duplicate angles, or unclear room function |
+| Heavy           |   7    | Many occluded/cluttered/mirror shots, rooms hard to tell apart, conflicting layouts                          |
+| Uninterpretable |   10   | The space cannot be reconstructed; the model will hallucinate                                                |
 
-### Noise — linear scale (1–5)
+### Noise — linear scale (1–10)
 
 Signal-level degradation. *(Coarse auto-proxy: manifest LOW-RES flag, edge < 720px.)*
 
 | Score | Meaning                                                                                   |
 | :---: | ----------------------------------------------------------------------------------------- |
 |   1   | Pristine — 1600px+ shortest edge, sharp, correct exposure/color, no artifacts or overlays |
-|   2   | Clean gallery — 720–1600px, sharp, mild downsizing                                        |
-|   3   | Soft — visible compression/blur, mild over/under-exposure, or under 720px                 |
-|   4   | Degraded — heavy artifacts, motion blur, watermarks/text overlays, fisheye distortion     |
-|   5   | Unusable — tiny, severe artifacts, illegible                                              |
+|   3   | Clean gallery — 720–1600px, sharp, mild downsizing                                        |
+|   5   | Soft — visible compression/blur, mild over/under-exposure, or under 720px                 |
+|   7   | Degraded — heavy artifacts, motion blur, watermarks/text overlays, fisheye distortion     |
+|  10   | Unusable — tiny, severe artifacts, illegible                                              |
 
 ---
 
