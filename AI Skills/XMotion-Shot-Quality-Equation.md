@@ -3,18 +3,20 @@ title: XMotion — Shot Quality Equation
 type: ai-skill
 domain: scoring
 status: draft
-version: 0.5
-updated: 2026-06-27
+version: 0.6
+updated: 2026-07-03
 tags: [xmotion, scoring, EST, shot-quality, listing-gate, set-degradation]
 maintainer: XMotion Studio
 name: XMotion Shot Quality Equation
-description: The canonical scoring contract and listing gate. Use when scoring a captured photo set, scouting a capture block off disk, ranking Higgsfield models, or deciding pass/maybe/fail before any credits are spent. Trigger on score, scout, grade, SD, EST, quality, gate, or any capture-block review. Defines EST = MV / SD, the ambiguity doubling scale (1-16), the linear noise scale (1-5), the SD listing gate verdicts, and the step-by-step scouting protocol over TN_ thumbnails.
+description: The canonical scoring contract and listing gate. Use when scoring a captured photo set, scouting a capture block off disk, ranking Higgsfield models, scoring a rendered output video, or deciding pass/maybe/fail before any credits are spent. Trigger on score, scout, grade, SD, EST, quality, gate, potential, yield, resonance, the glyphs ⲱ Ⲱ Ѡ, or any capture-block or output review. Defines EST = MV / SD, the glyph layer ⲱ (Shot Potential, Before) / Ⲱ (Shot Yield, After) / Ѡ (Shot Resonance, Balanced), the ambiguity doubling scale (1-16), the linear noise scale (1-5), the SD listing gate verdicts, the post-shot scoring reflex, and the step-by-step scouting protocol over TN_ thumbnails.
 tools: filesystem
 growth:
   - Lock EST gate thresholds once model MV is assigned (open item, WBS 4.3)
   - Tune noise and ambiguity rubric anchors against more real capture blocks
   - Auto-noise estimation from edge size and JPEG quantization in a later parser pass
   - Amenity tag at capture time so segmentation is recorded, not inferred
+  - Decide whether Ѡ gains an SD divisor (Ѡ = Ⲱ·ⲱ/SD) once real scored shots accumulate
+  - Consider √(Ⲱ·ⲱ) normalization if the 1-10,000 Ѡ range proves unwieldy in review
 ---
 
 # XMotion — Shot Quality Equation
@@ -23,6 +25,38 @@ growth:
 > thresholds OPEN (calibrate against model MV). Shared-team reference: the
 > canonical scoring contract (for the Claude account) and the listing gate
 > (for VAs). Keep it professional.
+
+---
+
+## The Glyph Layer (v0.6) — Before / After / Balanced
+
+The MV numerator now carries a glyph and is recorded **per shot**, not only per
+model, and a post-render score closes the loop:
+
+| Glyph | Codepoint | Name | Formula | Phase |
+|:-----:|-----------|------|---------|-------|
+| ⲱ | U+2CB1 | **Shot Potential** | √(Model-Quality %ile × Shot-Quantity %ile), P1–P100 each | *Before* — what the setup puts on the table |
+| Ⲱ | U+2CB0 | **Shot Yield** | Output Video Quality, 1–100, judged on the rendered walkthrough | *After* — what the render delivered |
+| Ѡ | U+0460 | **Shot Resonance** | Ⲱ × ⲱ (range 1–10,000) | *Balanced* — high only when a strong setup also lands |
+| SD | — | Set Degradation | √(Ambiguity × Noise) — unchanged, the input gate divisor | *Gate* |
+
+ⲱ **is** MV — same geometric mean, now stamped onto each listing row at shot time
+so per-VA and per-model averages accumulate automatically. EST = ⲱ/SD remains the
+pre-spend gate; Ѡ is the *learning* metric that ranks models (WBS 4.3) and VAs on
+realized output. Ⲱ is judged by the Claude account against the walkthrough-realism
+criteria in the MV rubric below (spatial coherence, camera motion, texture/lighting
+fidelity, no hallucinated geometry) — applied to the actual output, not the ceiling.
+
+**Post-shot scoring reflex:** the moment a shot result is recorded, write
+`model_quality_pctile`, `shot_quantity_pctile`, `shot_potential` (ⲱ); the moment the
+rendered video is reviewed, write `output_quality` (Ⲱ) and `shot_resonance` (Ѡ = Ⲱ·ⲱ),
+then run the materializer. Dashboards: `Analysis\Shot Scoring`. Full trigger map:
+`AI Skills\XMotion-Automated-Tracking.md`.
+
+> **Scale note (flagged 2026-07-03):** a draft restatement described SD as
+> √(Ambiguity(1-10) × Noise(1-10)). The locked contract remains **Ambiguity doubling
+> (1/2/4/8/16) × Noise linear (1-5)** — the gate bands below depend on it. If Chief
+> intends a scale change, rebase the PASS/MAYBE/FAIL bands in the same edit.
 
 ---
 

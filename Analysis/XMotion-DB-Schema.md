@@ -5,7 +5,7 @@ tools: filesystem
 type: schema
 domain: analytics
 status: draft
-version: 0.1
+version: 0.2
 updated: 2026-07-03
 db_path: C:\dev\XMotion\Analysis\XMotion.db
 maintainer: XMotion Studio
@@ -350,6 +350,52 @@ Recommended: a one-shot builder `_Tools\xmotion_db.py` that runs all the DDL abo
 - **Quality math** — `quality_sd` stored on insert to stay portable; switch to a generated column only if we confirm math functions are compiled into the bundled SQLite.
 - **Re-offers** — `offers` allows multiple per listing (follow-ups). Decide whether conversion counts first-offer-only or any-accept.
 - **Location source** — seed `locations` from `Analysis\Location Tracking & Notes` when that reference is formalized.
+
+---
+
+---
+
+## 9. Extension — 2026-07-03 (shot scoring + format/overlay tracking)
+
+**Live in `_Tools\xmotion_db.py` via the idempotent `MIGRATIONS` list; verified against production and demo DBs.**
+
+### 9.1 New columns on `listings`
+
+| Column | Type | Meaning |
+|---|---|---|
+| `model_quality_pctile` | INTEGER | P1–P100, walkthrough-realism ceiling of the chosen model |
+| `shot_quantity_pctile` | INTEGER | P1–P100, credit efficiency at target settings |
+| `shot_potential` | REAL | **ⲱ** = √(MQ × SQ) — *Shot Potential (Before)*; X computes at write |
+| `output_quality` | INTEGER | **Ⲱ** = Output Video Quality 1–100 — *Shot Yield (After)*; judged on the render |
+| `shot_resonance` | REAL | **Ѡ** = Ⲱ × ⲱ — *Shot Resonance (Balanced)*; X computes at write |
+| `frame_aspect` | TEXT | 16:9 \| 9:16 \| 1:1 — deliverable frame |
+| `content_aspect` | TEXT | actual content aspect (e.g. 3:4 letterboxed inside 9:16) |
+| `resolution_out` | TEXT | output resolution, e.g. 1080x1920 |
+| `border_type` | TEXT | none \| black \| white |
+| `overlay_template_id` | INTEGER | FK → `overlay_templates` |
+
+### 9.2 New dimension: `overlay_templates`
+
+`template_id · name (A-1, A-2…) · placement · loop_version · created_at` — seeded with
+A-1 (center-bottom-right) and A-2 (top-right) on loop-v1.
+
+### 9.3 New views
+
+`v_shot_scoring` (per-shot ledger) · `v_va_shot_scoring` (per-VA avg ⲱ/Ⲱ/Ѡ) ·
+`v_model_scoring` (per-model avg — the WBS 4.3 ranking table) · `v_format_combo`
+(conversion by frame × content × border) · `v_overlay_performance` (conversion by
+A-series template).
+
+### 9.4 New dashboards
+
+`Analysis\Shot Scoring` and `Analysis\Format & Overlay` (materializer now projects 6 pages).
+
+### 9.5 Trigger table superseded
+
+§5 remains accurate but is no longer canonical — the complete reflex map including
+the scoring and format triggers lives in **`AI Skills\XMotion-Automated-Tracking.md`**.
+
+*Extension signed — wiz-6 (Head of Strategy).*
 
 ---
 

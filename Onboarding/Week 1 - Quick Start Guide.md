@@ -294,7 +294,7 @@ Find Airbnb listings where you can confidently predict a property’s walkthroug
     
 2. **Image and property quality** — brightness, staging, and overall listing presentation
     
-3. **Market location** — using the pre‑built location charts in `\XMotion\Analysis\Location Tracking & Notes`
+3. **Market location** — using the pre‑built location charts in `\XMotion\Analysis\Locations
     
 
 Mastering these three variables turns sourcing from guesswork into a repeatable skill.
