@@ -88,6 +88,10 @@ MIGRATIONS = [
     ("listings", "resolution_out",        "TEXT"),     # e.g. 1080x1920
     ("listings", "border_type",           "TEXT"),     # none | black | white
     ("listings", "overlay_template_id",   "INTEGER REFERENCES overlay_templates(template_id)"),
+    # -- sourcing metrics (2026-07-03, Collin directive): Airbnb listing signals --
+    ("listings", "price_per_night",       "REAL"),     # trip price incl. fees, USD
+    ("listings", "rating",               "REAL"),     # listing star rating, e.g. 4.98
+    ("listings", "reviews_n",            "INTEGER"),  # review count at sourcing time
 ]
 
 def migrate(cur):
