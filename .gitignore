@@ -1,0 +1,26 @@
+# XMotion .gitignore
+
+# Local-only secrets - never sync
+_Private/
+
+# Python
+__pycache__/
+*.pyc
+
+# Demo / scratch artifacts
+Analysis/XMotion_demo.db
+Analysis/**/*(Demo Preview)*.md
+_Tools/overlay_out_test/
+_Tools/_header_backup/
+
+# Full-resolution captures stay local (TN_ thumbnails + manifests DO sync)
+Captures/**/*.png
+
+# Obsidian per-machine state (keeps autosync commits clean)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# SQLite transient files (the .db itself IS tracked - single-writer rule)
+*.db-journal
+*.db-wal
+*.db-shm
