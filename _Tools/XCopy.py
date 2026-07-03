@@ -34,6 +34,13 @@ OUTPUT LAYOUT
                 _manifest.md          <- index + WxH + LOW-RES flag per image
                 TN_PM_3-42_3-47\\     <- AI-readable thumbnails (scout reads here)
                     001.jpg  002.jpg ...
+                CS_PM_3-42_3-47\\     <- 3x3 contact sheets (bulk scout: 9 frames/read)
+                    CS_PM_3-42_3-47_01.jpg ...
+
+Contact sheets rebuild automatically whenever a block closes ([n], [q], or
+window expiry). To (re)generate sheets for ALL existing blocks:
+
+    py XCopy.py --backfill
 
 Low-resolution images are FLAGGED but still saved. The flag is a coarse
 picture-quality signal; the Shot Quality gate scores Noise/Ambiguity properly.
@@ -56,6 +63,11 @@ MIN_GOOD_EDGE_PX      = 720     # shortest edge below this -> flagged LOW-RES
                                 # (720 = can't fill a 720p video frame)
 THUMB_MAX_PX          = 768     # thumbnail longest edge
 THUMB_QUALITY         = 72      # thumbnail JPEG quality
+SHEET_COLS            = 3       # contact sheet grid columns
+SHEET_ROWS            = 3       # contact sheet grid rows (9 frames/sheet)
+SHEET_CELL_W          = 480     # contact sheet cell width  (px)
+SHEET_CELL_H          = 330     # contact sheet cell height (px)
+SHEET_FONT_PX         = 44      # frame-number label size (white, center-cell)
 IMAGE_EXTS            = (".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tif", ".tiff")
 # ---------------------------------------------------------------------------
 
@@ -206,6 +218,105 @@ class Block:
         return name, size, flag
 
 
+def _sheet_font(size=SHEET_FONT_PX):
+    """Bold system font if available; PIL default as last resort."""
+    try:
+        from PIL import ImageFont
+        for name in ("arialbd.ttf", "arial.ttf", "segoeui.ttf"):
+            try:
+                return ImageFont.truetype(name, size)
+            except Exception:
+                continue
+        return ImageFont.load_default()
+    except Exception:
+        return None
+
+
+def build_contact_sheets(block_dir, block_name):
+    """Stitch TN_ thumbnails into 3x3 CS_ grid sheets.
+
+    Each cell shows one thumbnail with its frame number overlaid in the
+    center as white text (black stroke for legibility on any background).
+    Sheets land in  CS_<block>\\CS_<block>_NN.jpg  -> 55 frames = 7 reads.
+    Idempotent: stale sheets are cleared and rebuilt on every call.
+    """
+    from PIL import ImageDraw
+    tn_dir = os.path.join(block_dir, "TN_" + block_name)
+    if not os.path.isdir(tn_dir):
+        return 0
+    thumbs = sorted(f for f in os.listdir(tn_dir) if f.lower().endswith(".jpg"))
+    if not thumbs:
+        return 0
+    cs_dir = os.path.join(block_dir, "CS_" + block_name)
+    os.makedirs(cs_dir, exist_ok=True)
+    for old in os.listdir(cs_dir):                 # rebuild-clean on re-run
+        if old.lower().endswith(".jpg"):
+            try:
+                os.remove(os.path.join(cs_dir, old))
+            except Exception:
+                pass
+    per = SHEET_COLS * SHEET_ROWS
+    font = _sheet_font()
+    sheets = 0
+    for s in range(0, len(thumbs), per):
+        batch = thumbs[s:s + per]
+        rows = (len(batch) + SHEET_COLS - 1) // SHEET_COLS
+        sheet = Image.new("RGB", (SHEET_COLS * SHEET_CELL_W, rows * SHEET_CELL_H),
+                          (24, 24, 24))
+        draw = ImageDraw.Draw(sheet)
+        for i, fn in enumerate(batch):
+            r, c = divmod(i, SHEET_COLS)
+            x0, y0 = c * SHEET_CELL_W, r * SHEET_CELL_H
+            try:
+                with Image.open(os.path.join(tn_dir, fn)) as im:
+                    im = im.convert("RGB")
+                    im.thumbnail((SHEET_CELL_W - 8, SHEET_CELL_H - 8))
+                    sheet.paste(im, (x0 + (SHEET_CELL_W - im.width) // 2,
+                                     y0 + (SHEET_CELL_H - im.height) // 2))
+            except Exception:
+                pass
+            label = os.path.splitext(fn)[0]        # '001'
+            cx = x0 + SHEET_CELL_W // 2
+            cy = y0 + SHEET_CELL_H // 2
+            try:
+                draw.text((cx, cy), label, fill="white", font=font,
+                          anchor="mm", stroke_width=3, stroke_fill="black")
+            except TypeError:                      # very old Pillow: no anchor/stroke
+                draw.text((cx - 30, cy - 20), label, fill="white", font=font)
+        sheets += 1
+        sheet.save(os.path.join(cs_dir, f"CS_{block_name}_{sheets:02d}.jpg"),
+                   "JPEG", quality=82)
+    return sheets
+
+
+def finalize_block_assets(block_dir, block_name):
+    n = build_contact_sheets(block_dir, block_name)
+    if n:
+        print(f"  [sheets] {n} contact sheet(s) -> CS_{block_name}\\")
+    return n
+
+
+def backfill(root=CAPTURE_ROOT):
+    """Regenerate CS_ contact sheets for every existing capture block."""
+    made = blocks = 0
+    if not os.path.isdir(root):
+        print(f"no capture root at {root}")
+        return
+    for day in sorted(os.listdir(root)):
+        day_dir = os.path.join(root, day)
+        if not os.path.isdir(day_dir):
+            continue
+        for blk in sorted(os.listdir(day_dir)):
+            blk_dir = os.path.join(day_dir, blk)
+            if not os.path.isdir(os.path.join(blk_dir, "TN_" + blk)):
+                continue
+            n = build_contact_sheets(blk_dir, blk)
+            print(f"[backfill] {day}\\{blk}: {n} sheet(s)")
+            made += n
+            blocks += 1
+    print(f"backfill complete: {blocks} block(s), {made} sheet(s)")
+
+
 def get_clipboard():
     """Returns ('image', PIL.Image) | ('files', [paths]) | None."""
     try:
@@ -222,6 +333,10 @@ def get_clipboard():
 
 
 def main():
+    if "--backfill" in sys.argv[1:]:
+        backfill()
+        return
+
     window_min = parse_window_arg(sys.argv[1:])
     os.makedirs(CAPTURE_ROOT, exist_ok=True)
 
@@ -232,8 +347,9 @@ def main():
     print(f"  root   : {CAPTURE_ROOT}")
     print(f"  window : {window_min} min blocks  (folder = AMPM_start_end, Eastern)")
     print(f"  thumbs : TN_<block>/  ({THUMB_MAX_PX}px JPEG, AI scout layer)")
+    print(f"  sheets : CS_<block>/  (3x3 grids, frame # centered — built at block close)")
     print(f"  rule   : shortest edge < {MIN_GOOD_EDGE_PX}px  ->  flagged LOW-RES")
-    print(f"  keys   : [n] close block   [q] quit")
+    print(f"  keys   : [n] close block   [q] quit      (--backfill rebuilds all sheets)")
     print(bar)
     print("Waiting for the first copy...")
 
@@ -247,6 +363,7 @@ def main():
             if key == "q":
                 break
             if key == "n" and block is not None:
+                finalize_block_assets(block.dir, block.name)
                 print("--- block closed; next copy opens a fresh one ---")
                 block = None
 
@@ -260,6 +377,8 @@ def main():
                     now = now_east()
 
                     if block is None or block.expired(now):
+                        if block is not None:
+                            finalize_block_assets(block.dir, block.name)
                         block = Block(now, window_min)
                         print(f"\n[block] {block.dir}")
 
@@ -286,6 +405,7 @@ def main():
         pass
 
     if block is not None:
+        finalize_block_assets(block.dir, block.name)
         print(f"\nDone. Last block: {block.dir}  ({block.count} images)")
     else:
         print("\nDone. No images captured.")
