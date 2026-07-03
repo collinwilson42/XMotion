@@ -92,6 +92,9 @@ MIGRATIONS = [
     ("listings", "price_per_night",       "REAL"),     # trip price incl. fees, USD
     ("listings", "rating",               "REAL"),     # listing star rating, e.g. 4.98
     ("listings", "reviews_n",            "INTEGER"),  # review count at sourcing time
+    # -- prompt tracking (2026-07-03, Collin directive): confirmed template per shot --
+    ("listings", "shot1_prompt",          "TEXT"),     # confirmed prompt template, shot 1
+    ("listings", "shot2_prompt",          "TEXT"),     # confirmed prompt template, shot 2
 ]
 
 def migrate(cur):
