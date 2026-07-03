@@ -1,6 +1,6 @@
 # Images x Seconds Dashboard
 
-> Materialized from `XMotion.db` at 2026-07-03 15:18 by xmotion_materialize.py. Do not hand-edit - regenerate instead.
+> Materialized from `XMotion.db` at 2026-07-03 18:08 by xmotion_materialize.py. Do not hand-edit - regenerate instead.
 >
 > Gradient: cell color = conversion rate (green 30%+). Row/col totals below.
 
@@ -17,8 +17,14 @@
 
 ## S-Value Performance (per-image pacing)
 
-> *No data yet - this dashboard populates as WIZX records listings.*
+| S | Listings | Offers | Accepted | Conversion | Revenue |
+|---|---|---|---|---|---|
+| 2.0s/im | 1 | 0 | - | - | - |
+| 2.5s/im | 1 | 0 | - | - | - |
+| 3.0s/im | 1 | 0 | - | - | - |
 
 ## Duration Performance (S*N output side)
 
-> *No data yet - this dashboard populates as WIZX records listings.*
+| Duration | Listings | Offers | Accepted | Conversion |
+|---|---|---|---|---|
+| 90s | 3 | 0 | - | - |

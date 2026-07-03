@@ -1,6 +1,6 @@
 # Shot Scoring Dashboard
 
-> Materialized from `XMotion.db` at 2026-07-03 15:18 by xmotion_materialize.py. Do not hand-edit - regenerate instead.
+> Materialized from `XMotion.db` at 2026-07-03 18:08 by xmotion_materialize.py. Do not hand-edit - regenerate instead.
 >
 > Gradient: ⲱ Potential (Before) &amp; Ⲱ Yield (After) green at 85+. Ѡ Resonance (Balanced) green at 7000+. SD inverted: low = green.
 
