@@ -181,7 +181,7 @@ Now that Claude can control your PC, let it build your workspace. In a new chat,
 
 Once it's created, download the XMotion project files and put them inside:
 
-- **XMotion Tools and Filebase:** `https://github.com/YOUR-ORG/XMotion` *(I'll send you the exact link + access)*
+- **XMotion Tools and Filebase:** https://github.com/collinwilson42/XMotion
 
 The goal is for the files to end up at **`C:\dev\XMotion`** (so you'll have `C:\dev\XMotion\_Tools`, `C:\dev\XMotion\AI Skills`, and so on). Download the zip to your downloads then request claude unzip it and move it to the dev folder. 
 
