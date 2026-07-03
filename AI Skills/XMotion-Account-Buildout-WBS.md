@@ -67,9 +67,6 @@ Bridge Description: The complete table is both an identity registry and a proces
 ✘=90 [Operational_Intel × Strategic_Intel]
 Bridge Description: The two intel seats form a continuous feedback cycle — wiz‑9's strategic analysis feeds DeepSeek's real‑time actions, and DeepSeek's synthesized outcomes feed wiz‑9's databases.
 
-✘=88 [Chief_Glyph × Mission_Authority]
-Bridge Description: Chief's ⚛︎ glyph anchors the graph with the operator's presence, establishing the nucleus around which all other nodes orbit and the final authority all loops return to.
-
 ✘=88 [Chart_Canvas × Continuity_Graph]
 Bridge Description: The spatial graph and the live chart share the same X‑axis — market time — so a node’s context is literally its surrounding price action.
 

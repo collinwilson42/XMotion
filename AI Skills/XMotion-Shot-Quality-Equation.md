@@ -129,14 +129,13 @@ Signal-level degradation. *(Coarse auto-proxy: manifest LOW-RES flag, edge < 720
 
 ## Listing Gate (VA-facing) — score SD on the captured block
 
-Pick the Ambiguity weight (1/2/4/8/16) and the Noise score (1–5), compute
 `SD = sqrt(Ambiguity × Noise)`:
 
-| SD range | Verdict | Action |
-|----------|---------|--------|
-| ≤ 2.0 | **PASS** | Shoot as-is. *Optimal zone: SD ≤ 1.4* (unambiguous + clean) |
-| 2.0 – 3.5 | **MAYBE** | Viable after prep — segment unit vs. amenity and drop redundant angles, then shoot |
-| > 3.5 | **FAIL** | Abandon — log `ABANDONED – IMAGE QUALITY` or `ABANDONED – AMBIGUITY`; do not burn shots |
+| SD range | Verdict   | Action                                                                                  |
+| -------- | --------- | --------------------------------------------------------------------------------------- |
+| TBD      | **PASS**  | Shoot as-is. *Optimal zone: SD ≤ x (unambiguous + clean)                                |
+| TBD      | **MAYBE** | Viable after prep — segment unit vs. amenity and drop redundant angles, then shoot      |
+| TBD      | **FAIL**  | Abandon — log `ABANDONED – IMAGE QUALITY` or `ABANDONED – AMBIGUITY`; do not burn shots |
 
 Reading the bands: minor ambiguity (≤2) can never Fail; moderate ambiguity (4)
 passes only with clean photos and otherwise lands in Maybe; heavy/uninterpretable
@@ -147,9 +146,9 @@ spot-checks.
 
 ---
 
-## Scouting Protocol — "scout this folder / scout the most recent block"
+## Scouting Protocol
 
-When asked to **scout** a capture folder, the Claude account does the following, in order:
+When asked to **scout** a capture folder, WIZX does the following, in order:
 
 1. **Locate the block.** It lives at `Captures\<YYYY-MM-DD>\<BLOCK>\` (e.g. `PM_3-59_4-04`).
 2. **Read `_manifest.md`** for the image count, resolutions, and coarse LOW-RES flags.
