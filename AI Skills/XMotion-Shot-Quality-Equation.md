@@ -95,12 +95,12 @@ anchors are spaced to keep discrimination at the dangerous end.
 
 ## The Glyph Ladder — Before / After / Balanced
 
-| Glyph | Codepoint  | Name                | Formula                                                          | Phase                                                 |
-| :---: | ---------- | ------------------- | ---------------------------------------------------------------- | ----------------------------------------------------- |
-|   ⲱ   | U+2CB1     | **Shot Potential**  | √( avgFlow × avgQual × avgLoc × avgMS ) / √( avgAmb × avgNoise ) | *Before* — what the keeper set puts on the table      |
-| **Ⲱ** | U+2CB0     | **Shot Yield**      | √(֎🇦🇮 × ✔️) / 🔗                                               | *After* — what the render delivered                   |
-|   Ѡ   | U+0460     | **Shot Resonance**  | Ⲱ × ⲱ ,<br>Ⲱ : ⲱ                                                 | *Balanced* — high only when a strong setup also lands |
-| **⊜** | **U+229C** | **Set Degradation** | **√(Avg_Ambiguity × Avg_Noise), 1–99**                           | **Pre-Shot Gate**                                     |
+| Glyph | Codepoint  | Name                | Formula                                                          | Phase                                            |
+| :---: | ---------- | ------------------- | ---------------------------------------------------------------- | ------------------------------------------------ |
+|   ⲱ   | U+2CB1     | **Shot Potential**  | √( avgFlow × avgQual × avgLoc × avgMS ) / √( avgAmb × avgNoise ) | *Before* — what the keeper set puts on the table |
+| **Ⲱ** | U+2CB0     | **Shot Yield**      | √(֎🇦🇮 × ✔️) / 🔗                                               | *After* — what the render delivered              |
+|   Ѡ   | U+0460     | **Shot Resonance**  | Ⲱ × ⲱ ,<br>Ⲱ : ⲱ                                                 | *Balanced* — when a strong setup also lands      |
+| **⊜** | **U+229C** | **Set Degradation** | **√(Avg_Ambiguity × Avg_Noise), 1–99**                           | **Pre-Shot Gate**                                |
 
 **ⲱ is now derived from the canonical equation** — the Catalog score of the
 keeper set, normalized to 1–99 (÷10, cap 99; a strong clean block lands in the
@@ -130,13 +130,4 @@ master). Full trigger map: `AI Skills\XMotion-Automated-Tracking.md`.
 
 ---
 
-## Open / to calibrate
-
-- **Rubric anchors + gate bands** — 1–99 anchors and PASS ≤ 25 / MAYBE ≤ 40 /
-  FAIL > 40 are drafts; tune against more real blocks.
-- **ⲱ normalization** — Catalog/10 cap 99 is a draft; recheck once dashboards
-  hold 20+ scored shots.
-- **Auto-noise** — consider auto-estimating Noise from edge + JPEG quantization
-  in a later parser pass.
-- **Amenity tag** — capture-time unit/amenity tag so segmentation is recorded,
-  not inferred.
+*XMotion Studio. Signed — Collin.*
