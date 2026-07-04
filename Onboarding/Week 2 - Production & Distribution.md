@@ -178,12 +178,12 @@ to end. We pass or we fail. If we fail in month 1, we kill it. We won't fail.
 upgrades to **Ultra (3,200 credits/mo)** and everyone's limits expand for more
 reps:
 
-| Producer | Month 1 (1,147.5 cr) | Month 2 Ultra (3,200 cr)* | Reps (previews/mo) |
-|---|---|---|---|
-| Collin | 40% · 459.0 | 30% · 960 | ~17 → ~37 |
-| Jaisa | 20% · 229.5 | **25% · 800** | ~9 → ~30 |
-| Richlan | 20% · 229.5 | **25% · 800** | ~9 → ~30 |
-| House reserve | 20% · 229.5 | 20% · 640 | — |
+| Producer      | Month 1 (1,147.5 cr) | Month 2 Ultra (3,200 cr)* | Reps (previews/mo) |
+| ------------- | -------------------- | ------------------------- | ------------------ |
+| Collin        | 40% · 459.0          | 40% · 960                 | ~17 → ~            |
+| Jaisa         | 20% · 229.5          | 20% · 480                 | ~9 → ~             |
+| Richlan       | 20% · 229.5          | 20% · 480                 | ~9 → ~             |
+| House reserve | 20% · 229.5          | 20% · 480                 | —                  |
 
 *Month 2 split proposed (VA 25% each per the growth ladder is locked; Collin/
 reserve shares adjustable). Reps estimated at the ~26.25-credit blended preview
@@ -203,4 +203,4 @@ Then set real initials for filenames:
 `UPDATE vas SET initials='XX' WHERE name='...';` (defaults to first two letters).
 
 ---
-*Drafted — WIZX, 2026-07-03. Cut anything; the DB layer beneath survives any cut.*
+*Drafted — WIZX, 2026-07-03. 
