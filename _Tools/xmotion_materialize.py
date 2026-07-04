@@ -195,17 +195,26 @@ def main():
              " `listing_x_factors`. WIZX records these on the spot during sourcing review.\n")
     write("X-Factor Relativity", "X-Factor Relativity Dashboard", body)
 
-    # ---- Shot Quality ----
-    body = header("Shot Quality Dashboard",
-                  "verdict conversion green at 30%+. VA avg SD inverted: low = green.")
+    # ---- Shot Quality Scoring (merged master: gate -> \u2CB1/\u2CB0/\u0460 -> \u058e/\u2714/\U0001F517/\u26A1) ----
+    body = header("Shot Quality Scoring Dashboard",
+                  "conversion green at 30%+. \u2CB1 Potential &amp; \u2CB0 Yield green at 85+. "
+                  "\u0460 Resonance green at 7000+. \u26A1 efficiency green at 4+. "
+                  "SD inverted: low = green.")
+    body += ("> **The scoring ladder (one document, every layer):**\n"
+             "> 1. **Gate** — SD = \u221a(Ambiguity \u00d7 Noise) \u00b7 PASS \u2264 2.0 \u00b7 MAYBE \u2264 3.5 \u00b7 FAIL > 3.5 — spend nothing on a FAIL.\n"
+             "> 2. **Listing layer** — \u2CB1 Potential = \u221a(Model-Quality %ile \u00d7 Shot-Quantity %ile) (*Before*) \u00b7\u00b7 "
+             "\u2CB0 Yield = Output Video Quality 1\u2013100 (*After*) \u00b7\u00b7 \u0460 Resonance = \u2CB0 \u00d7 \u2CB1 (*Balanced*).\n"
+             "> 3. **Shot layer (Week 2)** — \u058e\U0001F1E6\U0001F1EE AI quality 1\u201399 (pending review) \u00b7 \u058e Collin-final 1\u201399 \u00b7 "
+             "\u2714\uFE0F response 1\u201399 (1 = none) \u00b7 \U0001F517 credits-to-viable (incl. regens) \u00b7 "
+             "\u26A1 = \u221a(\u058e \u00d7 \u2714\uFE0F) / \U0001F517 (final when present, else AI). \u26A1 compares within tier only.\n\n")
+    body += "## 1. Does the gate predict conversion?\n\n"
     cols, rows = q(cur, "SELECT quality_verdict, listings, offers_sent, accepted, conversion_rate"
                         " FROM v_quality_vs_outcome ORDER BY CASE quality_verdict"
                         " WHEN 'PASS' THEN 0 WHEN 'MAYBE' THEN 1 ELSE 2 END")
     styled = [[r[0], r[1], r[2], r[3],
                bar(r[4], 0.0, 0.30, fmt="{:.1%}") if r[4] is not None else None] for r in rows]
-    body += "## Does the gate predict conversion?\n\n"
     body += table(["Verdict", "Listings", "Offers", "Accepted", "Conversion"], styled)
-    body += "\n## VA Scorecard\n\n"
+    body += "\n## 2. VA Scorecard (ops + commission)\n\n"
     cols, rows = q(cur, "SELECT name, listings, shots_used, avg_shots, abandon_rate,"
                         " avg_quality_sd, offers_sent, accepted, conversion_rate, commission"
                         " FROM v_va_scorecard")
@@ -217,25 +226,7 @@ def main():
                f"${r[9]:,.2f}" if r[9] else "-"] for r in rows]
     body += table(["VA", "Listings", "Shots", "Avg Shots", "Abandon", "Avg SD",
                    "Offers", "Accepted", "Conversion", "Commission"], styled)
-    body += "\n## Monthly Ops (capacity + abandonment guardrails)\n\n"
-    cols, rows = q(cur, "SELECT month, listings, shots_used, abandon_rate FROM v_monthly_ops"
-                        " ORDER BY month")
-    styled = [[r[0], r[1],
-               chip(r[2], 0, 100, invert=True) if r[2] is not None else None,
-               chip(r[3], 0.0, 0.30, invert=True, fmt="{:.1%}") if r[3] is not None else None]
-              for r in rows]
-    body += table(["Month", "Listings", "Shots (cap 60-100)", "Abandon Rate (flag >20%)"], styled)
-    write("Shot Quality", "Shot Quality Dashboard", body)
-
-    # ---- Shot Scoring (Potential / Yield / Resonance) ----
-    body = header("Shot Scoring Dashboard",
-                  "\u2CB1 Potential (Before) &amp; \u2CB0 Yield (After) green at 85+. "
-                  "\u0460 Resonance (Balanced) green at 7000+. SD inverted: low = green.")
-    body += ("> **Glyph key:** \u2CB1 = Shot Potential = \u221a(Model-Quality %ile \u00d7 "
-             "Shot-Quantity %ile) \u00b7 *Before* \u00b7\u00b7 \u2CB0 = Shot Yield = Output "
-             "Video Quality (1-100) \u00b7 *After* \u00b7\u00b7 \u0460 = Shot Resonance = "
-             "\u2CB0 \u00d7 \u2CB1 \u00b7 *Balanced*\n\n"
-             "## VA Scoring Averages\n\n")
+    body += "\n## 3. VA Scoring Averages (\u2CB1 / \u2CB0 / \u0460)\n\n"
     cols, rows = q(cur, "SELECT name, scored_shots, avg_potential, avg_yield, avg_resonance,"
                         " avg_sd FROM v_va_shot_scoring ORDER BY avg_resonance DESC")
     styled = [[r[0], r[1],
@@ -246,7 +237,7 @@ def main():
               for r in rows]
     body += table(["VA", "Scored", "Avg \u2CB1 Potential", "Avg \u2CB0 Yield",
                    "Avg \u0460 Resonance", "Avg SD"], styled)
-    body += "\n## Model Ranking (feeds MV assignment, WBS 4.3)\n\n"
+    body += "\n## 4. Model Ranking (feeds MV assignment, WBS 4.3)\n\n"
     cols, rows = q(cur, "SELECT model, scored_shots, avg_potential, avg_yield, avg_resonance"
                         " FROM v_model_scoring ORDER BY avg_resonance DESC")
     styled = [[r[0], r[1],
@@ -255,7 +246,7 @@ def main():
                bar(r[4], 1600, 7000, fmt="{:,.0f}") if r[4] is not None else None]
               for r in rows]
     body += table(["Model", "Scored", "Avg \u2CB1", "Avg \u2CB0", "Avg \u0460"], styled)
-    body += "\n## Recent Scored Shots\n\n"
+    body += "\n## 5. Recent Scored Shots (listing layer)\n\n"
     cols, rows = q(cur, "SELECT date_started, va, model, shot_potential, output_quality,"
                         " shot_resonance, quality_verdict FROM v_shot_scoring"
                         " ORDER BY date_started DESC LIMIT 25")
@@ -265,7 +256,42 @@ def main():
                bar(r[5], 1600, 7000, fmt="{:,.0f}") if r[5] is not None else None,
                r[6]] for r in rows]
     body += table(["Date", "VA", "Model", "\u2CB1", "\u2CB0", "\u0460", "Gate"], styled)
-    write("Shot Scoring", "Shot Scoring Dashboard", body)
+    body += "\n## 6. Efficiency by Producer \u00d7 Tier (\u26A1 ablation — within-tier only)\n\n"
+    cols, rows = q(cur, "SELECT va, tier, credits_used, response_score, quality_eff,"
+                        " review_state, date_produced, status FROM v_shot_efficiency"
+                        " ORDER BY va, tier, date_produced")
+    agg = {}
+    for va, tier, cred, resp, qual, state, date, status in rows:
+        e = efficiency(qual, resp, cred)
+        if e is not None:
+            agg.setdefault((va, tier), []).append(e)
+    styled = [[va, tier, len(effs),
+               bar(round(sum(effs)/len(effs), 2), 0, 6, fmt="{:.2f}"),
+               f"{max(effs):.2f}"]
+              for (va, tier), effs in sorted(agg.items())]
+    body += table(["Producer", "Tier", "Scored Shots", "Avg \u26A1", "Best \u26A1"], styled)
+    body += "\n## 7. Review Queue (\u058e\U0001F1E6\U0001F1EE = awaiting Collin's final \u058e)\n\n"
+    cols, rows = q(cur, "SELECT date_produced, va, tier, quality_ai, quality_final,"
+                        " response_score, credits_used, review_state, status"
+                        " FROM v_shot_efficiency ORDER BY date_produced DESC LIMIT 30")
+    styled = [[r[0], r[1], r[2],
+               chip(r[3], 1, 99) if r[3] is not None else None,
+               chip(r[4], 1, 99) if r[4] is not None else None,
+               chip(r[5], 1, 99) if r[5] is not None else None,
+               r[6],
+               ("\u058e final" if r[7] == "final" else "\u058e\U0001F1E6\U0001F1EE pending"),
+               r[8]] for r in rows]
+    body += table(["Date", "Producer", "Tier", "\u058e\U0001F1E6\U0001F1EE AI", "\u058e Final",
+                   "\u2714\uFE0F", "\U0001F517", "Review", "Status"], styled)
+    body += "\n## 8. Monthly Ops (capacity + abandonment guardrails)\n\n"
+    cols, rows = q(cur, "SELECT month, listings, shots_used, abandon_rate FROM v_monthly_ops"
+                        " ORDER BY month")
+    styled = [[r[0], r[1],
+               chip(r[2], 0, 100, invert=True) if r[2] is not None else None,
+               chip(r[3], 0.0, 0.30, invert=True, fmt="{:.1%}") if r[3] is not None else None]
+              for r in rows]
+    body += table(["Month", "Listings", "Shots (cap 60-100)", "Abandon Rate (flag >20%)"], styled)
+    write("Shot Quality Scoring", "Shot Quality Scoring Dashboard", body)
 
     # ---- Format & Overlay ----
     body = header("Format & Overlay Dashboard",
@@ -289,19 +315,22 @@ def main():
                    "Conversion"], styled)
     write("Format & Overlay", "Format & Overlay Dashboard", body)
 
-    # ---- Production & Distribution (Week 2 layer) ----
+    # ---- Production & Distribution (Week 2: budget + outreach ONLY; all scoring
+    #      lives in Shot Quality Scoring — one metric, one home) ----
     body = header("Production & Distribution Dashboard",
-                  "\u26A1 efficiency green at 4+. \u2714\uFE0F response green at 60+. "
-                  "Budget remaining inverted: low = red.")
-    body += ("> **Key:** \U0001F517 credits-to-viable (incl. regens) \u00b7 \u2714\uFE0F response 1-99 "
-             "(1 = none) \u00b7 \u058e\U0001F1E6\U0001F1EE AI score pending review \u00b7 \u058e final "
-             "Collin-adjusted \u00b7 \u26A1 = \u221a(\u058e \u00d7 \u2714\uFE0F) / \U0001F517 "
-             "(uses final when present, else AI)\n\n## Budget Status (month \u00d7 producer)\n\n")
+                  "budget remaining inverted: low = red. Response rate green at 50%+.")
+    body += ("> **Scope:** credit budgets and the tier A/B outreach experiment. "
+             "All quality/efficiency scoring (\u058e, \u2714\uFE0F, \u26A1, review queue) "
+             "lives in `Analysis\\Shot Quality Scoring`.\n\n"
+             "## Budget Status (month \u00d7 producer)\n\n")
     cols, rows = q(cur, "SELECT month, va, credits_allocated, credits_spent, credits_remaining"
                         " FROM v_budget_status ORDER BY month, credits_allocated DESC")
     styled = [[r[0], r[1], f"{r[2]:g}", f"{r[3]:g}",
                bar(r[4], 0, r[2] or 1, fmt="{:.1f}") if r[4] is not None else None] for r in rows]
     body += table(["Month", "Producer", "Allocated", "Spent", "Remaining"], styled)
+    body += ("\n> July 2026 split (rev 2): Collin 40% \u00b7 Jaisa 20% \u00b7 Richlan 20% \u00b7 "
+             "house reserve 20%. Reserve uses: (1) finishing preview clips that get interest, "
+             "(2) a prospective partner allocation, (3) efficiency raise — top \u26A1 of the prior month.\n")
     body += "\n## Tier A/B Results (outreach experiment)\n\n"
     cols, rows = q(cur, "SELECT tier, shots, sent, responses, response_rate, avg_response,"
                         " avg_quality, credits FROM v_tier_ab ORDER BY tier")
@@ -312,33 +341,8 @@ def main():
                r[7]] for r in rows]
     body += table(["Tier", "Shots", "Sent", "Responses", "Response Rate",
                    "Avg \u2714\uFE0F", "Avg \u058e", "Credits"], styled)
-    body += "\n## Efficiency by Producer \u00d7 Tier (\u26A1 ablation)\n\n"
-    cols, rows = q(cur, "SELECT va, tier, credits_used, response_score, quality_eff,"
-                        " review_state, date_produced, status FROM v_shot_efficiency"
-                        " ORDER BY va, tier, date_produced")
-    agg = {}
-    for va, tier, cred, resp, qual, state, date, status in rows:
-        e = efficiency(qual, resp, cred)
-        if e is not None:
-            agg.setdefault((va, tier), []).append(e)
-    styled = [[va, tier, len(effs),
-               bar(round(sum(effs)/len(effs), 2), 0, 6, fmt="{:.2f}"),
-               f"{max(effs):.2f}"]
-              for (va, tier), effs in sorted(agg.items())]
-    body += table(["Producer", "Tier", "Scored Shots", "Avg \u26A1", "Best \u26A1"], styled)
-    body += "\n## Recent Shots (review queue: \u058e\U0001F1E6\U0001F1EE = awaiting Collin)\n\n"
-    cols, rows = q(cur, "SELECT date_produced, va, tier, quality_ai, quality_final,"
-                        " response_score, credits_used, review_state, status"
-                        " FROM v_shot_efficiency ORDER BY date_produced DESC LIMIT 30")
-    styled = [[r[0], r[1], r[2],
-               chip(r[3], 1, 99) if r[3] is not None else None,
-               chip(r[4], 1, 99) if r[4] is not None else None,
-               chip(r[5], 1, 99) if r[5] is not None else None,
-               r[6],
-               ("\u058e final" if r[7] == "final" else "\u058e\U0001F1E6\U0001F1EE pending"),
-               r[8]] for r in rows]
-    body += table(["Date", "Producer", "Tier", "\u058e\U0001F1E6\U0001F1EE AI", "\u058e Final",
-                   "\u2714\uFE0F", "\U0001F517", "Review", "Status"], styled)
+    body += ("\n> Cross-tier comparison happens HERE on response rate — never on \u26A1 "
+             "(the credit denominator structurally favors cheap tiers).\n")
     write("Production & Distribution", "Production & Distribution Dashboard", body)
 
     # ---- Filename materialization (DB -> Analytics\Shots mp4 names) ----

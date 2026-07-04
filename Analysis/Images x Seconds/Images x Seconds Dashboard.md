@@ -1,6 +1,6 @@
 # Images x Seconds Dashboard
 
-> Materialized from `XMotion.db` at 2026-07-03 18:08 by xmotion_materialize.py. Do not hand-edit - regenerate instead.
+> Materialized from `XMotion.db` at 2026-07-04 12:16 by xmotion_materialize.py. Do not hand-edit - regenerate instead.
 >
 > Gradient: cell color = conversion rate (green 30%+). Row/col totals below.
 
