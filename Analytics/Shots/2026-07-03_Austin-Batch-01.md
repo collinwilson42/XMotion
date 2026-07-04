@@ -7,7 +7,7 @@ model: Kling 3.0
 mv_provisional: MQ 85 x SQ 95 -> shot_potential (ⲱ) ≈ 89.9
 gate: SD 1.30 (Amb 1 x Noise 1.7) — PASS
 s_assignment: 3.0 s/image (rotation slot 3)
-status: batch 1 FIRED 2026-07-03 — 6 jobs generating (Kling 3.0, std, 5s, silent, ~45 credits)
+status: batch 1 reviewed — 1/6 keeper (clip 6). Std-mode floor suspect; pro-mode test staged (living path 007→015)
 recorded_by: WIZX
 date: 2026-07-03
 ---
@@ -57,6 +57,21 @@ twin-queen boho, bunk room) — market as group/family property. Arch mirror in
 multiple living frames.
 
 **Batch cost estimate:** 45 credits actual (6 clips × 7.5 credits — Kling 3.0 std, 5s, sound off; preflight verified). Account at fire: 1,210 credits, Plus plan.
+
+## Batch 1 results (T5 — reviewed 2026-07-03, Collin)
+
+| Clip | Result | Failure mode |
+|---|---|---|
+| 1 (045→042) | FAIL | pending Collin's note |
+| 2 (005→033) | FAIL | pending (033 facing was pre-flagged) |
+| 3 (016→034) | FAIL | pending |
+| 4 (010 ctrl) | FAIL | pending — note: single-frame control ALSO failed → pairing not the cause; std-mode floor suspect |
+| 5 (048→049) | FAIL | pending |
+| 6 (054→053) | KEEP ✅ | dusk closer — clearest single-axis travel + strongest anchor (glowing house) |
+
+**Reading:** 1/6, below the 4/6 calibration. Control failing alongside pairs → mode
+(std) is the prime suspect, geometry discipline second. Next test: pro mode, one
+variable changed, on the living-path clip (007→015, 10s, curve named in prompt).
 
 ## Job registry (T3 — fired 2026-07-03)
 
