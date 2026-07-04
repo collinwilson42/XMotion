@@ -39,23 +39,23 @@ All six factors are **1–99 integers**. Applied per image by the Image Scorer
 live there). Averaged over a block, the same form yields the **Catalog score**:
 
 ```
-Catalog = √( avgFlow × avgQual × avgLoc × avgMoney ) / √( avgAmb × avgNoise )
+Catalog = √( avgFlow × avgQual × avgLoc × avgMS ) / √( avgAmb × avgNoise )
 ```
 
 The **denominator alone** is the pre-spend gate; the **full ratio** is the
 potential measure. Same fraction, two jobs.
 
-## The SD Gate (block level — spend nothing on a FAIL)
+## The **⊜** Gate (block level — spend nothing on a FAIL)
 
 ```
-SD = √( Ambiguity × Noise )        both 1–99, higher = worse
+⊜ = √( Ambiguity × Noise )        both 1–99, higher = worse
 ```
 
-| SD range | Verdict   | Action                                                                                  |
-| -------- | --------- | --------------------------------------------------------------------------------------- |
-| ≤ 25     | **PASS**  | Shoot as-is. *Optimal zone: SD ≤ 15 (unambiguous + clean)*                              |
-| 25–40    | **MAYBE** | Viable after prep — segment unit vs. amenity, drop redundant angles, then shoot         |
-| > 40     | **FAIL**  | Abandon — log `ABANDONED – IMAGE QUALITY` or `ABANDONED – AMBIGUITY`; do not burn shots |
+| **⊜** range | Verdict   | Action                                                                                  |
+| ----------- | --------- | --------------------------------------------------------------------------------------- |
+| ≤ 20        | **PASS**  | Shoot as-is. *Optimal zone: **⊜** ≤ 15 (unambiguous + clean)*                           |
+| 20–30       | **MAYBE** | Viable after prep — segment unit vs. amenity, drop redundant angles, then shoot         |
+| > 30        | **FAIL**  | Abandon — log `ABANDONED – IMAGE QUALITY` or `ABANDONED – AMBIGUITY`; do not burn shots |
 
 *(Bands are the old PASS ≤ 2.0 / ≤ 3.5 semantics mapped onto 1–99 — every
 historical verdict survives the rescale unchanged. Draft anchors; calibrate
@@ -100,7 +100,7 @@ anchors are spaced to keep discrimination at the dangerous end.
 |   ⲱ   | U+2CB1    | **Shot Potential** | Catalog / 10, capped at 99                                      | *Before* — what the keeper set puts on the table      |
 |   Ⲱ   | U+2CB0    | **Shot Yield**     | Output Video Quality, 1–100, judged on the rendered walkthrough | *After* — what the render delivered                   |
 |   Ѡ   | U+0460    | **Shot Resonance** | Ⲱ × ⲱ (range 1–10,000)                                          | *Balanced* — high only when a strong setup also lands |
-|  SD   | —         | Set Degradation    | √(Ambiguity × Noise), 1–99                                      | *Pre-Gate*                                            |
+| **⊜** | —         | Set Degradation    | √(Ambiguity × Noise), 1–99                                      | *Pre-Gate*                                            |
 
 **ⲱ is now derived from the canonical equation** — the Catalog score of the
 keeper set, normalized to 1–99 (÷10, cap 99; a strong clean block lands in the
