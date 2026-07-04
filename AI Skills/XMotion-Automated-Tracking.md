@@ -90,7 +90,7 @@ Read `config.s_next_index` → assign `s_rotation[index]` → advance index (mod
 | Which X-Factors show up in wins?                     | `v_x_factor_performance`           | X-Factor Relativity              |
 
 > **One metric, one home:** `Shot Quality Scoring` is the single scoring master —
-> the full ladder (SD gate → ⲱ/Ⲱ/Ѡ → ֎/✔️/🔗/⚡). `Production & Distribution` is
+> the full ladder (pre-gate → ⲱ/Ⲱ/Ѡ → ֎/✔️/🔗/⚡). `Production & Distribution` is
 > budgets + tier A/B outreach only. The old `Shot Quality` and `Shot Scoring`
 > dashboards are retired (2026-07-04) — merged into Shot Quality Scoring.
 
