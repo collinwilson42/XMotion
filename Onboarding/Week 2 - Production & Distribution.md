@@ -56,8 +56,9 @@ call with Collin — see §3. The budget is generous *because* the guidance is
 mandatory.
 
 **Growth ladder:** first sale this month → account upgrades to Ultra (3,200
-credits/mo) → VA allocations rise to **25% each**, then grow as ⚡ numbers prove
-out. Your budget is earned by your efficiency score, not by tenure.
+credits/mo) → every allocation nearly triples at the same split (see §9), and ⚡
+numbers decide how shares evolve from Month 3. Your budget is earned by your
+efficiency score, not by tenure.
 
 ## 3. Group Session Protocol (VA production)
 
@@ -178,18 +179,17 @@ to end. We pass or we fail. If we fail in month 1, we kill it. We won't fail.
 upgrades to **Ultra (3,200 credits/mo)** and everyone's limits expand for more
 reps:
 
-| Producer      | Month 1 (1,147.5 cr) | Month 2 Ultra (3,200 cr)* | Reps (previews/mo) |
-| ------------- | -------------------- | ------------------------- | ------------------ |
-| Collin        | 40% · 459.0          | 40% · 960                 | ~17 → ~            |
-| Jaisa         | 20% · 229.5          | 20% · 480                 | ~9 → ~             |
-| Richlan       | 20% · 229.5          | 20% · 480                 | ~9 → ~             |
-| House reserve | 20% · 229.5          | 20% · 480                 | —                  |
+| Producer      | Month 1 (1,147.5 cr) | Month 2 Ultra (3,200 cr) | Reps (previews/mo) |
+| ------------- | -------------------- | ------------------------ | ------------------ |
+| Collin        | 40% · 459.0          | 40% · 1,280              | ~17 → ~48          |
+| Jaisa         | 20% · 229.5          | 20% · 640                | ~9 → ~24           |
+| Richlan       | 20% · 229.5          | 20% · 640                | ~9 → ~24           |
+| House reserve | 20% · 229.5          | 20% · 640                | —                  |
 
-*Month 2 split proposed (VA 25% each per the growth ladder is locked; Collin/
-reserve shares adjustable). Reps estimated at the ~26.25-credit blended preview
-cost — each VA roughly **triples their monthly reps**, which is the point:
-proof of concept buys practice volume, practice volume buys efficiency, and ⚡
-numbers from Month 2 set the Month 3 allocations.
+Same split, ~2.8× the ammunition. Reps estimated at the ~26.25-credit blended
+preview cost — every producer nearly **triples their monthly reps**, which is
+the point: proof of concept buys practice volume, practice volume buys
+efficiency, and ⚡ numbers from Month 2 set the Month 3 allocations.
 
 ## 10. Run Order (Collin, once, to activate)
 
