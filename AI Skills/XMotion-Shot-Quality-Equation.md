@@ -95,12 +95,12 @@ anchors are spaced to keep discrimination at the dangerous end.
 
 ## The Glyph Ladder — Before / After / Balanced
 
-| Glyph | Codepoint | Name               | Formula                                                         | Phase                                                 |
-| :---: | --------- | ------------------ | --------------------------------------------------------------- | ----------------------------------------------------- |
-|   ⲱ   | U+2CB1    | **Shot Potential** | Catalog / 10, capped at 99                                      | *Before* — what the keeper set puts on the table      |
-|   Ⲱ   | U+2CB0    | **Shot Yield**     | Output Video Quality, 1–100, judged on the rendered walkthrough | *After* — what the render delivered                   |
-|   Ѡ   | U+0460    | **Shot Resonance** | Ⲱ × ⲱ (range 1–10,000)                                          | *Balanced* — high only when a strong setup also lands |
-| **⊜** | —         | Set Degradation    | √(Ambiguity × Noise), 1–99                                      | *Pre-Gate*                                            |
+| Glyph | Codepoint  | Name                | Formula                                                         | Phase                                                 |
+| :---: | ---------- | ------------------- | --------------------------------------------------------------- | ----------------------------------------------------- |
+|   ⲱ   | U+2CB1     | **Shot Potential**  | Catalog / 10, capped at 99                                      | *Before* — what the keeper set puts on the table      |
+|   Ⲱ   | U+2CB0     | **Shot Yield**      | Output Video Quality, 1–100, judged on the rendered walkthrough | *After* — what the render delivered                   |
+|   Ѡ   | U+0460     | **Shot Resonance**  | Ⲱ × ⲱ (range 1–10,000)                                          | *Balanced* — high only when a strong setup also lands |
+| **⊜** | **U+229C** | **Set Degradation** | **√(Avg_Ambiguity × Avg_Noise), 1–99**                          | **Pre-Shot Gate**                                     |
 
 **ⲱ is now derived from the canonical equation** — the Catalog score of the
 keeper set, normalized to 1–99 (÷10, cap 99; a strong clean block lands in the
