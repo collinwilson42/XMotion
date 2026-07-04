@@ -61,11 +61,9 @@ out. Your budget is earned by your efficiency score, not by tenure.
 
 ## 3. Group Session Protocol (VA production)
 
-All VA generation happens in **live group sessions** — no solo firing in month
-one. The preferred format: **all three on one call** (Collin + Jaisa + Richlan),
+For the first month all VA generation happens in **live group sessions** — no solo firing in month one. The preferred format: **all three on one call** (Collin + Jaisa + Richlan),
 the producer taking the shot **screen-shares**, and everyone works the **same
-image archive** (the CS contact sheets for the listing in play) to argue out the
-money shots together before a credit moves. Money-shot identification is a
+image archive** (the CS contact sheets for the listing in play) to collectively decide on the money shots before a credit moves. Money-shot identification is a
 taught skill — the argument IS the training. Purpose: coaching in the moment,
 and no mistake gets made twice (check the Findings Log *before* every session,
 add to it after).
