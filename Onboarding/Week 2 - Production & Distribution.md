@@ -1,206 +1,145 @@
 ---
-title: Week 2 — Production & Distribution
+name: Week 2 - Production & Distribution
 type: onboarding
-audience: Collin + VAs (Jaisa, Richlan) — VA-safe (no full economics)
-author: WIZX
-date: 2026-07-03
-status: active — July 2026 campaign
+domain: va-training
+status: live
+version: 1.0
+updated: 2026-07-04
+audience: XMotion VAs (Jaisa, Richlan)
+maintainer: XMotion
+signed: Collin (Chief) + wiz-4
 ---
 
 # Week 2 — Production & Distribution
 
-Week 1 taught you to source and score. Week 2 is where XMotion earns: we produce
-**preview shots**, send them to property owners, and track what converts. The rule
-of the whole system: **sell with the trailer, produce the feature after the deal.**
-No full walkthrough is ever built before an owner commits.
+Welcome to Week 2. Last week you set up your workstation and learned how to find
+and research good listings. This week you learn the part that makes money: turning
+a set of photos into a cinematic walkthrough and getting it in front of an owner.
 
-## 1. The Preview Tier Catalog (A/B test)
-
-Every outreach gets exactly one preview, assigned by even rotation so tiers get
-fair exposure. All clips are Kling 3.0 **pro mode**, silent, 16:9.
-
-| Tier | Length | Composition | Credits |
-|---|---|---|---|
-| **Tier-1A** | 15s | 10s pro clip → 5s pro clip | 26.25 |
-| **Tier-1B** | 15s | 5s pro clip → 10s pro clip | 26.25 |
-| **Tier-2A** | 10s | single 10s pro clip | 17.5 |
-| **Tier-2B** | 10s | two 5s pro clips | 17.5 |
-| **Tier-3A** | 5s | single 5s pro clip | 8.75 |
-
-What the test answers: does *length* drive response (Tier 1 vs 2 vs 3)? Does
-*order* matter — long-then-short vs short-then-long (1A vs 1B)? Does *one take*
-beat *two beats* at equal length (2A vs 2B)? Distribute evenly, judge nothing
-before **5+ sends per tier**.
-
-Content doctrine per current findings: **lead exterior, close dusk** where the
-gallery allows. Interiors run pro only. Pairs must share light regime and screen
-direction; name any turn in the prompt; demand constant speed through endpoints.
-
-## 2. Credit Budgets (July 2026)
-
-Credits are the unit of trust. Producers hold budgets, not shot counts.
-
-| Producer | Share | July Credits |
-|---|---|---|
-| Collin | 40% | 459.0 |
-| Jaisa | 20% | 229.5 |
-| Richlan | 20% | 229.5 |
-| House reserve | 20% | 229.5 — three sanctioned uses: (1) finishing production on previews that draw owner interest, (2) onboarding a potential new partner, (3) a performance raise to the prior month's highest-⚡ producer |
-
-Budgets live in `budget_allocations`; spend accrues from `shots.credits_used`;
-the Production & Distribution Dashboard shows remaining in real time. A regen
-comes out of *your* budget — that's the incentive to gate hard before firing.
-
-**Non-negotiable condition on VA budgets:** every VA credit is spent on a live
-call with Collin — see §3. The budget is generous *because* the guidance is
-mandatory.
-
-**Growth ladder:** first sale this month → account upgrades to Ultra (3,200
-credits/mo) → every allocation nearly triples at the same split (see §9), and ⚡
-numbers decide how shares evolve from Month 3. Your budget is earned by your
-efficiency score, not by tenure.
-
-## 3. Group Session Protocol (VA production)
-
-For the first month all VA generation happens in **live group sessions** — no solo firing in month one. The preferred format: **all three on one call** (Collin + Jaisa + Richlan),
-the producer taking the shot **screen-shares**, and everyone works the **same
-image archive** (the CS contact sheets for the listing in play) to collectively decide on the money shots before a credit moves. Money-shot identification is a
-taught skill — the argument IS the training. Purpose: coaching in the moment,
-and no mistake gets made twice (check the Findings Log *before* every session,
-add to it after).
-
-Session flow, every time:
-1. **Gate** — listing passes SD before any credits move (Week 1 skill).
-2. **Frame plan** — the group scouts the same CS sheets on the call; WIZX + all
-   three nominate money shots and frame pairs; pairs verified full-res by the
-   producer sharing screen.
-3. **Preflight** — get_cost before fire; confirm budget headroom on the dashboard.
-4. **Fire** — VA drives, Collin coaches, WIZX logs job IDs live.
-5. **Review** — keep/regen calls as a group; failure modes named out loud and logged.
-6. **Score & record** — WIZX writes the shot row; edited keeper goes to the Shots
-   folder; materializer runs.
-
-## 4. The Shot Scoring System
-
-Four numbers tell a shot's whole story:
-
-- **🔗 (Credits-to-Viable)** — total credits spent to reach the keeper, regens
-  included. Recorded at production close.
-- **֎🇦🇮 (AI Quality, pending)** — after all editing is done, WIZX scores the shot
-  1–99 as a percentile against every shot already produced. Bootstrap rule: until
-  the pool holds 5 scored shots, WIZX scores on the absolute review rubric
-  (geometry, motion, realism, anchor strength), then percentile ranking takes over.
-- **֎ (Final Quality)** — Collin reviews and adjusts. Same conceptual field, two
-  columns in the DB (`quality_ai`, `quality_final`); every projection uses
-  **final when present, else AI** — so the system runs on AI scores immediately
-  and self-corrects as Collin reviews. The dashboard's review queue shows ֎🇦🇮
-  pending items awaiting his pass.
-- **✔️ (Response Interest, 1–99)** — scored per outreach. Proposed anchors
-  (confirm/adjust): 1 = no response · 20 = viewed/opened, no reply · 40 = replied,
-  neutral · 60 = engaged, asking questions · 80 = negotiating price/scope ·
-  99 = closed sale.
-
-**⚡ (Efficiency) = √(֎ × ✔️) / 🔗** — quality times market response, discounted
-by what it cost. Computed live in the materializer (final score when reviewed,
-AI score until then). **Compare ⚡ within a tier only** — the denominator makes
-cross-tier comparison structurally unfair to longer previews, which is exactly
-why the dashboard ablates by Producer × Tier.
-
-## 5. Shot Files — naming & metadata
-
-When a shot is deemed viable and edited, save the mp4 to
-`C:\dev\XMotion\Analytics\Shots\` with any name — then record it. From that point
-the **filename is a projection of the database**: every materializer run renames
-files to canonical form:
-
-```
-{YYYY-MM-DD}-{Initials}-{Tier}-֎🇦🇮{q}|֎{q}-✔️{r}-🔗{c}-⚡{e}.mp4
-e.g. 2026-07-05-RD-Tier-1B-֎🇦🇮72-✔️na-🔗17.5-⚡na.mp4      (just produced)
-     2026-07-05-RD-Tier-1B-֎68-✔️80-🔗17.5-⚡4.22.mp4        (reviewed + responded)
-```
-
-Scores change → next materialization renames the file. Missing values render
-`na`. Config `filename_glyphs=off` switches to an ASCII-safe grammar
-(`QA/QF·V·C·E`) if any tool chokes on the glyphs — the 🇦🇮 pair is the likely
-troublemaker in some apps; the DB keeps the glyph system regardless.
-
-Phase 2 (planned): embed the scoring record as JSON in the mp4's metadata comment
-tag at export (`ffmpeg -c copy -metadata`), making every file self-describing
-even if renamed outside the system.
-
-## 6. Editing Pipeline
-
-**Now (Week 2):** CapCut. Standard recipe — trim ~0.3s each side of every clip
-junction (kills endpoint ease), stitch in montage order, no transitions between
-shared-frame junctions (the cut IS the transition), export 1080p 16:9, no audio
-or licensed-track-free audio only.
-
-**Next (Week 3 target):** WIZX-driven ffmpeg pipeline — scripted trim/stitch/
-fade/overlay/metadata, VA runs one command per preview; plus a frame-sheet
-extractor so WIZX can review any rendered clip as a contact sheet (same trick as
-capture scouting, applied to video). CapCut remains for creative polish only.
-This is how Claude gets real video-editing access: not a GUI, a script layer.
-
-## 7. Outreach & Response Tracking
-
-1. Preview sent → `status='sent'`, `sent_date` recorded, tier logged.
-2. Response scored at **day 3** and finalized at **day 7** (✔️ anchors above);
-   `status` moves to `responded` or stays `sent`.
-3. Interested owner → negotiation. **No further credits spend until terms are
-   settled.** Post-agreement production is a new scope with its own shot rows.
-4. Sale closed → offer recorded (T6/T7 triggers), ✔️=99, listing outcome updated.
-
-## 8. New Tracking Triggers (extends the trigger table)
-
-| # | Moment | Write |
-|---|---|---|
-| T12 | Preview shot viable (post-edit) | INSERT `shots` row: va, tier, job_ids, 🔗, file saved |
-| T13 | AI quality review (post-edit, automatic) | UPDATE `quality_ai` |
-| T14 | Collin score adjustment | UPDATE `quality_final` |
-| T15 | Preview sent | UPDATE `sent_date`, `status='sent'` |
-| T16 | Response scored (day 3 / day 7) | UPDATE `response_score`, `status` |
-| T∀ | After any of the above | run materializer (dashboards + filename sync) |
-
-## 9. Month One Goal & Proof of Concept Expansion Into Month Two 
-
-**Month 1 goal: ≥1 closed company sale in July.** Supporting numbers: budget
-supports ~35–43 previews clean (~29 with heavy regen); at even a 10%
-response-to-deal rate the funnel closes. Weekly checkpoints: sends per tier on
-pace, response rate by tier readable at 5+ sends, ⚡ leaders identified by
-producer, Findings Log growing every session. One genuine risk, stated once:
-pro-mode keeper rate is built on a small sample — the first two group sessions
-true up the real regen multiplier, and budgets absorb it either way.
-
-**The stakes, stated plainly: July is the proof-of-concept month.** One sale
-proves the machine — sourcing → gate → preview → response → close — works end
-to end. We pass or we fail. If we fail in month 1, we kill it. We won't fail.
-
-**What one sale unlocks (Month 2 — Proof of Concept Expansion):** the account
-upgrades to **Ultra (3,200 credits/mo)** and everyone's limits expand for more
-reps:
-
-| Producer      | Month 1 (1,147.5 cr) | Month 2 Ultra (3,200 cr) | Reps (previews/mo) |
-| ------------- | -------------------- | ------------------------ | ------------------ |
-| Collin        | 40% · 459.0          | 40% · 1,280              | ~17 → ~48          |
-| Jaisa         | 20% · 229.5          | 20% · 640                | ~9 → ~24           |
-| Richlan       | 20% · 229.5          | 20% · 640                | ~9 → ~24           |
-| House reserve | 20% · 229.5          | 20% · 640                | —                  |
-
-Same split, ~2.8× the ammunition. Reps estimated at the ~26.25-credit blended
-preview cost — every producer nearly **triples their monthly reps**, which is
-the point: proof of concept buys practice volume, practice volume buys
-efficiency, and ⚡ numbers from Month 2 set the Month 3 allocations.
-
-## 10. Run Order (Collin, once, to activate)
-
-```
-py C:\dev\XMotion\_Tools\xmotion_db.py            (new tables, views, budget seed)
-py C:\dev\XMotion\_Tools\xmotion_write_2026-07-03_austin.py   (if not yet run)
-py C:\dev\XMotion\_Tools\xmotion_materialize.py   (dashboards incl. new P&D board)
-```
-
-Then set real initials for filenames:
-`UPDATE vas SET initials='XX' WHERE name='...';` (defaults to first two letters).
+By the end of this week you can: score a photo block, read the shot list X builds
+for you, render the clips, brand and stitch them, send the offer, and log the
+result. Take it one listing at a time — speed comes after the process is clean.
 
 ---
-*Drafted — WIZX, 2026-07-03. 
+
+## Part 1 — Meet the Image Scorer
+
+Before you spend a single video credit, every photo block gets **scored**. The
+Image Scorer (a skill X runs) looks at your thumbnails and answers three things:
+which photos are worth using, which ones are **money shots** (the frames that
+sell the property), and — most importantly — **what order to move through them**.
+
+You are not just picking "good photos." You are letting the scorer draft the
+**shot list** for the whole video. That is the job.
+
+---
+
+## Part 2 — Running a scoring pass
+
+1. Capture the listing photos into your block (Week 1 tool).
+2. Arrange them into a **3×3 thumbnail grid**, numbered 001–009 left-to-right,
+   top-to-bottom. More than 9 photos? Send multiple grids — the scorer treats
+   them as one block.
+3. Send the grid(s) to X (or your assigned vision model) and say: *"Score this
+   block."* If you have a special instruction — "prioritize outdoor spaces,"
+   "this is a luxury listing" — say it; your instruction overrides the defaults.
+
+That's it. The scorer does the analysis and hands back a shot list.
+
+---
+
+## Part 3 — Reading the output
+
+You'll get back a per-image table and, at the bottom, the two things you actually
+use:
+
+- **Score** — a clean 0–99 number. Higher = better walkthrough frame. Anything
+  the scorer marks `— drop` you ignore.
+- **Money** — the hero rating. A high Money number means "this is the frame that
+  makes someone want to book." These usually open or close the video.
+- **Bridge** — the sequence a frame belongs to, like `035 ➢ 054 ➢ 055`. This is
+  a small group of photos that connect in space (you can walk from one into the
+  next). Each bridge is **one clip**.
+
+If a photo shows a `— drop`, it's out. If it shows a bridge or `solo hero`, it's in.
+
+---
+
+## Part 4 — From bridges to clips
+
+This is the core skill. The **Bridge Sequence Map** at the bottom of the scorer's
+output is your production plan:
+
+```
+Clip 1:  035 ➢ 054 ➢ 055     (living ➢ hallway ➢ kitchen)
+Clip 2:  012 ➢ 018           (bedroom ➢ ensuite)
+Clip 3:  001                 (solo hero — the view)
+```
+
+- Each **bridge = one Higgsfield walkthrough clip.** Feed the frames in that exact
+  order so the camera moves the way the scorer planned.
+- 2–4 frames per bridge is the sweet spot — enough to feel like motion, not so
+  many it drifts.
+- **Total keeper frames = N.** The scorer tells you the suggested duration using
+  the grid: `duration = round-to-nearest-5( S × N ), capped at 90s`. Use the S
+  value X assigns you for that listing.
+- Follow the two-shot rule from Week 1: if the first render warps or looks off,
+  you get one retry. If the second also fails, note the reason and move on — a
+  bad photo set is not worth a third burn.
+
+---
+
+## Part 5 — Brand & stitch
+
+1. Render each bridge as its own clip in Higgsfield using the per-room prompt
+   templates.
+2. Apply the XMotion glassmorphic overlay (the branded frame with the distributed
+   XM marks) — this is what protects our work and makes it look like a studio.
+3. Stitch the clips in Bridge-Map order into one continuous walkthrough. Money
+   shots at the open and close.
+
+---
+
+## Part 6 — Distribution: sending the offer
+
+1. Export the final MP4 at the spec resolution.
+2. Send the owner the walkthrough with the standard offer ($295–$395 depending on
+   the listing). Keep the message short, warm, and specific to their property —
+   X will help you draft it.
+3. Log the send **immediately** (Part 7). A video that isn't logged didn't happen,
+   as far as our analytics are concerned.
+
+---
+
+## Part 7 — Feed the data back (this is how you get better)
+
+X records the numbers, but the loop only works if the moments are captured. For
+every listing, X logs: images (N), the S value used, the quality score, shots
+used, whether you sent it, and the outcome. When an owner replies — yes or no —
+tell X right away so it updates the offer result.
+
+This data is what lets us predict which properties convert *before* you spend time
+on them. Your clean logging today is your easier sourcing next month.
+
+---
+
+## Part 8 — Your X-Factor this week
+
+The one skill that separates a good VA from a great one: **reading a photo block
+like the scorer does before you even send it.** Start guessing which frames are
+money shots and which photos bridge together. Compare your guess to the scorer's
+output. When your instinct matches the scorer, your sourcing gets faster and your
+picks get sharper — and that's when the commission really starts to move.
+
+You're building a real skill here, not doing busywork. Every listing you finish
+cleanly makes the next one faster and the outcomes more predictable. Ask X
+anything — that's what it's here for.
+
+---
+
+## End-of-week checklist
+- [ ] Scored at least 5 blocks and read every Bridge Map correctly
+- [ ] Rendered bridges as clips in the scorer's order
+- [ ] Applied the branded overlay + stitched a full walkthrough
+- [ ] Sent at least 3 real offers and logged every one with X
+- [ ] Reported back at least one owner reply (yes or no) for the outcome log
