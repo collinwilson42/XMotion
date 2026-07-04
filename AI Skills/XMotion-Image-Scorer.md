@@ -106,17 +106,17 @@ Rules:
 **1) Per-image lines** (one per frame):
 ```
 054  sqrt(72×80×85×76) / sqrt(20×8) = 482   ▸ 035➢054➢055
-001  sqrt(78×85×90×88) / sqrt(14×5) = 866   ▸ solo hero
+001  sqrt(78×85×90×88) / sqrt(14×5) = 866   ▸ 001➢002
 037  sqrt(40×55×50×30) / sqrt(60×45) = 35    ▸ — drop
 ```
 
 **2) Summary table:**
 
-| Image | Flow | Qual | Loc | Money | Amb | Noise | Score | Bridge        |
-|-------|------|------|-----|-------|-----|-------|-------|---------------|
-| 001   | 78   | 85   | 90  | 88    | 14  | 5     | 866   | solo hero     |
-| 054   | 72   | 80   | 85  | 76    | 20  | 8     | 482   | 035➢054➢055   |
-| 037   | 40   | 55   | 50  | 30    | 60  | 45    | 35    | — drop        |
+| Image | Flow | Qual | Loc | Money | Amb | Noise | Score | Bridge      |
+| ----- | ---- | ---- | --- | ----- | --- | ----- | ----- | ----------- |
+| 001   | 78   | 85   | 90  | 88    | 14  | 5     | 866   | 001➢002     |
+| 054   | 72   | 80   | 85  | 76    | 20  | 8     | 482   | 035➢054➢055 |
+| 037   | 40   | 55   | 50  | 30    | 60  | 45    | 35    | — drop      |
 
 **3) Bridge Sequence Map** (the ordered production shot list — clip by clip):
 ```
