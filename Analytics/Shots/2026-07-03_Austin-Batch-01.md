@@ -77,12 +77,21 @@ variable changed, on the living-path clip (007→015, 10s, curve named in prompt
 
 | Clip | Job ID | Start media_id | End media_id |
 |---|---|---|---|
+| 7 (007→015, PRO 10s, living path) | c2d8384c-cc12-465f-acab-4b05c807c6fe | 3850c721-058c-40f6-8895-cfc58a3213fe | fdb1be7d-eeb4-4f2a-aab6-02c914d75c0f |
+
+| Clip | Job ID | Start media_id | End media_id |
+|---|---|---|---|
 | 1 (045→042) | 80c291c1-1991-420f-880e-a8a7991b2d0a | acdbc218-da2f-4a6e-ab1f-5bdafed45f59 | 312e12b5-8519-4df7-8329-47e42c57588b |
 | 2 (005→033) | 6c62b2a7-0f06-4473-9e61-1c4664cd70ca | 87e80d1a-6061-47e8-b74e-617578d8a1e7 | ea326eac-10e5-4421-94c9-e5f127d83bb5 |
 | 3 (016→034) | a783f217-670d-4a4d-8d89-ac4854362320 | 76f41344-6cd5-4cb6-9beb-fcad8d49f4c0 | 8247db7a-df8a-4eaf-a9f5-1abb8565db21 |
 | 4 (010 ctrl) | 3612aaed-3357-45b7-a571-0cea0860f521 | b5606700-e34c-4818-ae7e-7937cbea4db2 | — |
 | 5 (048→049) | 01f6fefd-5791-48fa-8411-4698790f2f90 | 83c5377f-12c8-49b7-957b-a400ed0c16c3 | c0c008ab-b011-46f4-bc20-0978a9362157 |
 | 6 (054→053) | e35fd15c-8559-48ff-a5d1-195d02769351 | 0b45f07a-759e-42fe-a5f9-f20852b94584 | 4443cf84-2e77-474f-a306-5f97d8d94213 |
+
+**Clip 7 experiment (fired 2026-07-03, 17.5 cr):** living path 007→015, pro mode,
+10s, curve named in prompt; 006 = implicit waypoint. Review = (a) pro-vs-std quality
+verdict, (b) spatial honesty: mid-clip frame vs 006 comparison. Outcome decides mode
+doctrine + whether multi-vantage paths run single-gen or stitched two-gen at shared frame.
 
 ## Bench (batch 2 candidates)
 
