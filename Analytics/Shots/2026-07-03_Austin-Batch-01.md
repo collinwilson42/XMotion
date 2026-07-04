@@ -62,16 +62,19 @@ multiple living frames.
 
 | Clip | Result | Failure mode |
 |---|---|---|
-| 1 (045→042) | FAIL | pending Collin's note |
+| 1 (045→042) | KEEP ✅ (upgraded on re-review — Collin: "clearly the money shot") | daylight approach — preview lead clip |
 | 2 (005→033) | FAIL | pending (033 facing was pre-flagged) |
 | 3 (016→034) | FAIL | pending |
 | 4 (010 ctrl) | FAIL | pending — note: single-frame control ALSO failed → pairing not the cause; std-mode floor suspect |
 | 5 (048→049) | FAIL | pending |
 | 6 (054→053) | KEEP ✅ | dusk closer — clearest single-axis travel + strongest anchor (glowing house) |
 
-**Reading:** 1/6, below the 4/6 calibration. Control failing alongside pairs → mode
-(std) is the prime suspect, geometry discipline second. Next test: pro mode, one
-variable changed, on the living-path clip (007→015, 10s, curve named in prompt).
+**Reading (rev 2):** 2/6 on std + 1/1 on pro. Both std keepers are exteriors; all
+interior std clips failed → mode doctrine: pro for interiors, std viable for
+strong-anchor exteriors. STRATEGY SHIFT (Collin, 2026-07-03): sell via dual
+money-shot preview (1×10s pro + 1×5s pro = 26.25 cr), full walkthrough produced
+only post-agreement. Listing #3 preview pair = clip 1 (approach) + clip 6 (dusk
+closer) or 8s-trimmed clip 7.
 
 ## Job registry (T3 — fired 2026-07-03)
 
