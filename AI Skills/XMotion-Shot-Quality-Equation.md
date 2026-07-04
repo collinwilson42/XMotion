@@ -98,8 +98,8 @@ anchors are spaced to keep discrimination at the dangerous end.
 | Glyph | Codepoint  | Name                | Formula                                                          | Phase                                                 |
 | :---: | ---------- | ------------------- | ---------------------------------------------------------------- | ----------------------------------------------------- |
 |   ⲱ   | U+2CB1     | **Shot Potential**  | √( avgFlow × avgQual × avgLoc × avgMS ) / √( avgAmb × avgNoise ) | *Before* — what the keeper set puts on the table      |
-|   Ⲱ   | U+2CB0     | **Shot Yield**      | √(֎ × ✔️) / 🔗                                                   | *After* — what the render delivered                   |
-|   Ѡ   | U+0460     | **Shot Resonance**  | Ⲱ × ⲱ (range 1–10,000)                                           | *Balanced* — high only when a strong setup also lands |
+| **Ⲱ** | U+2CB0     | **Shot Yield**      | √(֎🇦🇮 × ✔️) / 🔗                                               | *After* — what the render delivered                   |
+|   Ѡ   | U+0460     | **Shot Resonance**  | Ⲱ × ⲱ ,<br>Ⲱ : ⲱ                                                 | *Balanced* — high only when a strong setup also lands |
 | **⊜** | **U+229C** | **Set Degradation** | **√(Avg_Ambiguity × Avg_Noise), 1–99**                           | **Pre-Shot Gate**                                     |
 
 **ⲱ is now derived from the canonical equation** — the Catalog score of the
@@ -113,10 +113,10 @@ legacy (never populated on real data).
 realized Ѡ in `v_model_scoring` — no assigned MV, no pending thresholds. The
 D-3 open decision closes with this retirement.
 
-**Week 2 shot layer** — per produced *preview shot* (the `shots` table),
+**Post Shot Layer** — per produced *preview shot* (the `shots` table),
 downstream of the listing layer above: ֎🇦🇮 AI quality (1–99 percentile,
 post-edit, pending review) → ֎ Collin-final (1–99) · ✔️ response interest
-(1–99, 1 = none) · 🔗 credits-to-viable (incl. regens) · **⚡ = √(֎ × ✔️) / 🔗**
+(1–99, 1 = none) · 🔗 credits-to-viable (incl. regens) · **Ⲱ = √(֎ × ✔️) / 🔗**
 (final when present, else AI; within-tier comparison only). Full contract:
 `Onboarding\Week 2 - Production & Distribution.md` §7; triggers T14–T18 in
 `XMotion-Automated-Tracking.md`.
