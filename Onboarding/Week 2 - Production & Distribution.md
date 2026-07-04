@@ -3,11 +3,11 @@ name: Week 2 - Production & Distribution
 type: onboarding
 domain: va-training
 status: live
-version: 1.0
+version: 1
 updated: 2026-07-04
 audience: XMotion VAs (Jaisa, Richlan)
 maintainer: XMotion
-signed: Collin (Chief) + wiz-4
+signed: Collin  + wiz-4
 ---
 
 # Week 2 — Production & Distribution
@@ -37,9 +37,7 @@ You are not just picking "good photos." You are letting the scorer draft the
 ## Part 2 — Running a scoring pass
 
 1. Capture the listing photos into your block (Week 1 tool).
-2. Arrange them into a **3×3 thumbnail grid**, numbered 001–009 left-to-right,
-   top-to-bottom. More than 9 photos? Send multiple grids — the scorer treats
-   them as one block.
+2. They are automatically arranged into a **3×3 thumbnail grid**, numbered 001–009+
 3. Send the grid(s) to X (or your assigned vision model) and say: *"Score this
    block."* If you have a special instruction — "prioritize outdoor spaces,"
    "this is a luxury listing" — say it; your instruction overrides the defaults.
@@ -53,8 +51,8 @@ That's it. The scorer does the analysis and hands back a shot list.
 You'll get back a per-image table and, at the bottom, the two things you actually
 use:
 
-- **Score** — a clean 0–99 number. Higher = better walkthrough frame. Anything
-  the scorer marks `— drop` you ignore.
+- **Score** — higher = better walkthrough frame (scores land in the hundreds).
+  Anything the scorer marks `— drop` you ignore.
 - **Money** — the hero rating. A high Money number means "this is the frame that
   makes someone want to book." These usually open or close the video.
 - **Bridge** — the sequence a frame belongs to, like `035 ➢ 054 ➢ 055`. This is

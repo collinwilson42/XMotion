@@ -9,7 +9,7 @@ tools: filesystem
 type: ai-skill
 domain: image-scoring
 status: live
-version: 2.0
+version: 2.1
 updated: 2026-07-04
 audience: XMotion VAs, X, and vision models (Gemini / GPT-4o / Kimi)
 maintainer: XMotion
@@ -36,17 +36,24 @@ process every image across all grids as one block.
 ## Scoring Equation (per image)
 
 ```
-Score = 4th_root( Flow × Quality × Location × MoneyShot )  /  sqrt( Ambiguity × Noise )
+Score = sqrt( Flow × Quality × Location × MoneyShot )  /  sqrt( Ambiguity × Noise )
 ```
 
-All six factors are **1–99 integers**. The 4th-root on the numerator keeps Score
-on a clean ~0–99 scale, so we can add factors later without the number ballooning.
-Round the final Score to one decimal.
+Which is the same as one clean ratio under a single root:
+
+```
+Score = sqrt( (Flow × Quality × Location × MoneyShot) / (Ambiguity × Noise) )
+```
+
+All six factors are **1–99 integers**. Both sides sit under a square root, so the
+equation stays dimensionally symmetric and Scores land in the **hundreds**. Round
+the final Score to the nearest integer.
 
 > **v2 change:** v1.0 had three numerator factors and an inconsistent example
-> (formula said `/sqrt(Amb×Noise)`, example computed `/(Amb×Noise)`). v2 locks the
-> sqrt denominator (matches the Shot-Quality SD equation) and normalizes the
-> numerator. Old absolute thresholds (e.g. 500) no longer apply — see Keep rule.
+> (formula said `/sqrt(Amb×Noise)`, example computed `/(Amb×Noise)`). v2 adds
+> **MoneyShot** as a 4th numerator factor and locks the sqrt on both numerator and
+> denominator. This revives a meaningful absolute cutoff (~450–500), though the
+> percentile Keep rule below is the robust default.
 
 ### Numerator factors (desirability)
 1. **Flow (1–99)** — spatial connection to adjacent rooms: openings, sightlines,
@@ -85,30 +92,31 @@ Rules:
 - Every keeper belongs to exactly one bridge or is a solo hero. Dropped frames
   belong to none.
 
-## Keep rule (percentile, not absolute)
+## Keep rule (percentile, robust to scale)
 - Compute Score for all frames.
 - **Keep** frames at or above the **40th percentile** of the block (default;
   VA may override), targeting **8–15 keepers** for a coherent walkthrough.
 - **Auto-drop** any technical fail regardless of Score: too dark, blurry,
   fisheye-warped, or watermarked.
-- Only keepers are eligible for bridges.
+- Only keepers are eligible for bridges. (With the sqrt form an absolute cutoff
+  near ~450 also works, but percentile self-adjusts per block.)
 
 ## Output Format
 
 **1) Per-image lines** (one per frame):
 ```
-054  4rt(72×80×85×76) / sqrt(20×8) = 6.2  ▸ 035➢054➢055
-001  4rt(78×85×90×88) / sqrt(14×5) = 10.2 ▸ solo hero
-037  4rt(40×55×50×30) / sqrt(60×45) = 1.8 ▸ — drop
+054  sqrt(72×80×85×76) / sqrt(20×8) = 482   ▸ 035➢054➢055
+001  sqrt(78×85×90×88) / sqrt(14×5) = 866   ▸ solo hero
+037  sqrt(40×55×50×30) / sqrt(60×45) = 35    ▸ — drop
 ```
 
 **2) Summary table:**
 
 | Image | Flow | Qual | Loc | Money | Amb | Noise | Score | Bridge        |
 |-------|------|------|-----|-------|-----|-------|-------|---------------|
-| 001   | 78   | 85   | 90  | 88    | 14  | 5     | 10.2  | solo hero     |
-| 054   | 72   | 80   | 85  | 76    | 20  | 8     | 6.2   | 035➢054➢055   |
-| 037   | 40   | 55   | 50  | 30    | 60  | 45    | 1.8   | — drop        |
+| 001   | 78   | 85   | 90  | 88    | 14  | 5     | 866   | solo hero     |
+| 054   | 72   | 80   | 85  | 76    | 20  | 8     | 482   | 035➢054➢055   |
+| 037   | 40   | 55   | 50  | 30    | 60  | 45    | 35    | — drop        |
 
 **3) Bridge Sequence Map** (the ordered production shot list — clip by clip):
 ```
@@ -120,7 +128,7 @@ Total keeper frames (N) = 6  →  suggested duration at S=3.0 = round5(3.0×6) =
 
 **4) Catalog score:**
 ```
-Catalog = 4rt(avgFlow × avgQual × avgLoc × avgMoney) / sqrt(avgAmb × avgNoise) = XX.X
+Catalog = sqrt(avgFlow × avgQual × avgLoc × avgMoney) / sqrt(avgAmb × avgNoise) = XXX
 ```
 
 **5) Confidence:** `Overall Confidence: Y%` — given thumbnail resolution and what
