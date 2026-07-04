@@ -42,13 +42,13 @@ live there). Averaged over a block, the same form yields the **Catalog score**:
 ⲱ = √( avgFlow × avgQual × avgLoc × avgMS ) / √( avgAmb × avgNoise )
 ```
 
-The **denominator alone** is the pre-spend gate; the **full ratio** is the
+The **denominator alone** is the pre-shot gate; the **full ratio** is the
 potential measure. Same fraction, two jobs.
 
-## The **⊜** Gate (block level — spend nothing on a FAIL)
+## The **⊜** Gate (Shot Blocker)
 
 ```
-⊜ = √( Ambiguity × Noise )        both 1–99, higher = worse
+⊜ = √( AvgAmbiguity × AvgNoise )        both 1–99, higher = worse
 ```
 
 | **⊜** range | Verdict   | Action                                                                                  |
