@@ -421,4 +421,67 @@ alongside `images_n`, flow read, and `market_tier`.
 
 ---
 
+## 11. Extension — 2026-07-04 (Week 2: shot layer + credit budgets)
+
+**Live in `_Tools\xmotion_db.py` (DDL + seed) and applied to production and demo DBs
+2026-07-04. Full operating contract: `Onboarding\Week 2 - Production & Distribution.md`.**
+
+### 11.1 New table: `shots` (per-preview-shot ledger — the tier economy is per-shot)
+
+| Column | Type | Meaning |
+|---|---|---|
+| `shot_id` | INTEGER PK | |
+| `listing_id` | INTEGER FK | optional link to `listings` |
+| `va_id` | INTEGER FK NOT NULL | producer (Collin has an attribution row) |
+| `date_produced` | TEXT NOT NULL | |
+| `tier` | TEXT NOT NULL | Tier-1A \| Tier-1B \| Tier-2A \| Tier-2B \| Tier-3A |
+| `job_ids` | TEXT | comma-joined Higgsfield job UUIDs incl. regens |
+| `credits_used` | REAL | **🔗** total credits to viable shot, incl. regens |
+| `quality_ai` | INTEGER | **֎🇦🇮** AI percentile 1–99, post-edit, pending review |
+| `quality_final` | INTEGER | **֎** Collin-adjusted 1–99; NULL until reviewed |
+| `response_score` | INTEGER | **✔️** 1–99, anchored (1/20/40/60/80/99) |
+| `sent_date`, `status` | TEXT | draft \| viable \| sent \| responded \| closed |
+| `file_path` | TEXT | materialized filename in `Analytics\Shots` |
+
+**⚡ = √(quality_eff × ✔️) / 🔗** is *not stored* — computed by the materializer
+(quality_eff = final when present, else AI); compared within tier only.
+
+### 11.2 New table: `budget_allocations`
+
+`(month 'YYYY-MM', va_id, credits_allocated)` PK (month, va_id). July 2026 seed
+(rev 2, upsert): Collin 459.0 · Jaisa 229.5 · Richlan 229.5 (basis 1,147.5; 20%
+house reserve is the unallocated remainder — buffer / partner / ⚡ raise).
+
+### 11.3 New column + config
+
+`vas.initials` (TEXT) — filename token; falls back to `upper(substr(name,1,2))`
+until real initials are set. `config.filename_glyphs` = on \| off (ASCII QA/QF-V-C-E
+fallback for the 🇦🇮 token).
+
+### 11.4 New views
+
+`v_shot_efficiency` (per-shot ledger + review_state, glyph-filename source) ·
+`v_budget_status` (allocated/spent/remaining per month × producer) · `v_tier_ab`
+(response rate + avg ✔️/֎/credits per tier — the A/B readout).
+
+### 11.5 Dashboard reorganization (2026-07-04)
+
+`Analysis\Shot Quality` and `Analysis\Shot Scoring` are **retired**, merged into
+**`Analysis\Shot Quality Scoring`** — the single scoring master covering the full
+ladder: SD gate → ⲱ/Ⲱ/Ѡ → ֎/✔️/🔗/⚡ ablation + review queue + monthly ops.
+`Analysis\Production & Distribution` is trimmed to budgets + tier A/B outreach only.
+The materializer still projects 6 dashboards. Shot filenames in `Analytics\Shots`
+are rematerialized from DB truth on every run:
+`{YYYY-MM-DD}-{Initials}-{Tier}-֎🇦🇮{q}|֎{q}-✔️{r}-🔗{c}-⚡{e}.mp4`.
+
+### 11.6 New triggers
+
+T14 (shot viable → INSERT) · T15 (֎🇦🇮 post-edit) · T16 (֎ final) · T17 (sent) ·
+T18 (✔️ response) · T-B (pre-generation budget check on `v_budget_status`).
+Canonical reflex map: `AI Skills\XMotion-Automated-Tracking.md` v1.1.
+
+*Extension signed — wiz-4 (Head of Development), Fable session 2026-07-04.*
+
+---
+
 *Signed — wiz-4 (Head of Development). Schema is buildable as written; §7 turns it into a live DB on command.*

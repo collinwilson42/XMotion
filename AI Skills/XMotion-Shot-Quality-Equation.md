@@ -3,8 +3,8 @@ title: XMotion — Shot Quality Equation
 type: ai-skill
 domain: scoring
 status: draft
-version: 0.6
-updated: 2026-07-03
+version: 0.7
+updated: 2026-07-04
 tags: [xmotion, scoring, EST, shot-quality, listing-gate, set-degradation]
 maintainer: XMotion Studio
 name: XMotion Shot Quality Equation
@@ -40,6 +40,8 @@ model, and a post-render score closes the loop:
 | Ѡ | U+0460 | **Shot Resonance** | Ⲱ × ⲱ (range 1–10,000) | *Balanced* — high only when a strong setup also lands |
 | SD | — | Set Degradation | √(Ambiguity × Noise) — unchanged, the input gate divisor | *Gate* |
 
+**Week 2 shot layer (2026-07-04)** — per produced *preview shot* (the `shots` table), downstream of the listing layer above: ֎🇦🇮 AI quality (1–99 percentile, post-edit, pending review) → ֎ Collin-final (1–99) · ✔️ response interest (1–99, 1 = none) · 🔗 credits-to-viable (incl. regens) · **⚡ = √(֎ × ✔️) / 🔗** (final when present, else AI; within-tier comparison only). Full contract: `Onboarding\Week 2 - Production & Distribution.md` §7; triggers T14–T18 in `XMotion-Automated-Tracking.md`.
+
 ⲱ **is** MV — same geometric mean, now stamped onto each listing row at shot time
 so per-VA and per-model averages accumulate automatically. EST = ⲱ/SD remains the
 pre-spend gate; Ѡ is the *learning* metric that ranks models (WBS 4.3) and VAs on
@@ -50,13 +52,14 @@ fidelity, no hallucinated geometry) — applied to the actual output, not the ce
 **Post-shot scoring reflex:** the moment a shot result is recorded, write
 `model_quality_pctile`, `shot_quantity_pctile`, `shot_potential` (ⲱ); the moment the
 rendered video is reviewed, write `output_quality` (Ⲱ) and `shot_resonance` (Ѡ = Ⲱ·ⲱ),
-then run the materializer. Dashboards: `Analysis\Shot Scoring`. Full trigger map:
-`AI Skills\XMotion-Automated-Tracking.md`.
+then run the materializer. Dashboards: `Analysis\Shot Quality Scoring` (the merged
+scoring master, 2026-07-04 — replaces the retired Shot Quality + Shot Scoring pages).
+Full trigger map: `AI Skills\XMotion-Automated-Tracking.md`.
 
-> **Scale note (flagged 2026-07-03):** a draft restatement described SD as
-> √(Ambiguity(1-10) × Noise(1-10)). The locked contract remains **Ambiguity doubling
-> (1/2/4/8/16) × Noise linear (1-5)** — the gate bands below depend on it. If Chief
-> intends a scale change, rebase the PASS/MAYBE/FAIL bands in the same edit.
+> **Scale note — RESOLVED 2026-07-04:** a draft restatement had drifted the factor
+> tables to 1–10 linear. The locked contract is **Ambiguity doubling (1/2/4/8/16) ×
+> Noise linear (1–5)**; the tables below have been rebased back to it. The gate
+> bands (PASS ≤ 2.0 · MAYBE ≤ 3.5 · FAIL > 3.5) depend on these scales.
 
 ---
 
@@ -101,29 +104,29 @@ discrimination at the dangerous end, where a linear scale would collapse.
 
 ## Denominator — SD (the photos; the Claude account judges per block)
 
-### Ambiguity — linear scale (1-10)
+### Ambiguity — doubling scale (1/2/4/8/16), weighted heavier on purpose
 
 Sequencing / interpretive uncertainty for a coherent walkthrough.
 
 | Level           | Weight | Meaning                                                                                                      |
 | --------------- | :----: | ------------------------------------------------------------------------------------------------------------ |
 | Unambiguous     | **1**  | Clear room-by-room set, single subject (the unit), readable spatial flow                                     |
-| Minor           |   3    | A couple of redundant angles or one stray shot                                                               |
-| Moderate        |   5    | Mixed clusters needing segmentation (unit vs. amenity), redundant duplicate angles, or unclear room function |
-| Heavy           |   7    | Many occluded/cluttered/mirror shots, rooms hard to tell apart, conflicting layouts                          |
-| Uninterpretable |   10   | The space cannot be reconstructed; the model will hallucinate                                                |
+| Minor           |   2    | A couple of redundant angles or one stray shot                                                               |
+| Moderate        |   4    | Mixed clusters needing segmentation (unit vs. amenity), redundant duplicate angles, or unclear room function |
+| Heavy           |   8    | Many occluded/cluttered/mirror shots, rooms hard to tell apart, conflicting layouts                          |
+| Uninterpretable |   16   | The space cannot be reconstructed; the model will hallucinate                                                |
 
-### Noise — linear scale (1–10)
+### Noise — linear scale (1–5)
 
 Signal-level degradation. *(Coarse auto-proxy: manifest LOW-RES flag, edge < 720px.)*
 
 | Score | Meaning                                                                                   |
 | :---: | ----------------------------------------------------------------------------------------- |
 |   1   | Pristine — 1600px+ shortest edge, sharp, correct exposure/color, no artifacts or overlays |
-|   3   | Clean gallery — 720–1600px, sharp, mild downsizing                                        |
-|   5   | Soft — visible compression/blur, mild over/under-exposure, or under 720px                 |
-|   7   | Degraded — heavy artifacts, motion blur, watermarks/text overlays, fisheye distortion     |
-|  10   | Unusable — tiny, severe artifacts, illegible                                              |
+|   2   | Clean gallery — 720–1600px, sharp, mild downsizing                                        |
+|   3   | Soft — visible compression/blur, mild over/under-exposure, or under 720px                 |
+|   4   | Degraded — heavy artifacts, motion blur, watermarks/text overlays, fisheye distortion     |
+|   5   | Unusable — tiny, severe artifacts, illegible                                              |
 
 ---
 
@@ -131,11 +134,11 @@ Signal-level degradation. *(Coarse auto-proxy: manifest LOW-RES flag, edge < 720
 
 `SD = sqrt(Ambiguity × Noise)`:
 
-| SD range | Verdict   | Action                                                                                  |
-| -------- | --------- | --------------------------------------------------------------------------------------- |
-| TBD      | **PASS**  | Shoot as-is. *Optimal zone: SD ≤ x (unambiguous + clean)                                |
-| TBD      | **MAYBE** | Viable after prep — segment unit vs. amenity and drop redundant angles, then shoot      |
-| TBD      | **FAIL**  | Abandon — log `ABANDONED – IMAGE QUALITY` or `ABANDONED – AMBIGUITY`; do not burn shots |
+| SD range   | Verdict   | Action                                                                                  |
+| ---------- | --------- | --------------------------------------------------------------------------------------- |
+| ≤ 2.0      | **PASS**  | Shoot as-is. *Optimal zone: SD ≤ 1.5 (unambiguous + clean)*                             |
+| 2.0–3.5    | **MAYBE** | Viable after prep — segment unit vs. amenity and drop redundant angles, then shoot      |
+| > 3.5      | **FAIL**  | Abandon — log `ABANDONED – IMAGE QUALITY` or `ABANDONED – AMBIGUITY`; do not burn shots |
 
 Reading the bands: minor ambiguity (≤2) can never Fail; moderate ambiguity (4)
 passes only with clean photos and otherwise lands in Maybe; heavy/uninterpretable

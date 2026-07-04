@@ -3,8 +3,8 @@ title: XMotion — Automated Tracking
 type: ai-skill
 domain: analytics-automation
 status: active
-version: 1.0
-updated: 2026-07-03
+version: 1.1
+updated: 2026-07-04
 tags: [xmotion, tracking, automation, reflexes, db, materializer, scoring]
 maintainer: XMotion Studio
 name: XMotion Automated Tracking
@@ -45,15 +45,22 @@ growth:
 | T11 | New X-Factor spotted | `INSERT INTO x_factors` + `INSERT INTO listing_x_factors` | name, category, spotted_by |
 | T12 | Every 10 offers | Report `v_s_performance` rollup in chat | (config: `rollup_every_offers`) |
 | T13 | After 20 offers, clear S winner | `UPDATE config SET value=? WHERE key='s_locked'` | (config: `lock_threshold_offers`) |
-| **T∀** | **After ANY write above** | **`py _Tools\xmotion_materialize.py`** | refreshes all 6 dashboards |
+| T14 | Shot declared viable, mp4 saved to `Analytics\Shots\` | `INSERT INTO shots` | `listing_id, va_id, date_produced, tier, job_ids, credits_used (🔗 incl. regens), file_path, status='viable'` |
+| T15 | All editing done → AI quality review | `UPDATE shots` | `quality_ai` (֎🇦🇮, 1–99 percentile vs. all prior produced shots) |
+| T16 | Collin final review | `UPDATE shots` | `quality_final` (֎, 1–99) |
+| T17 | Preview sent to owner | `UPDATE shots` | `sent_date, status='sent'` |
+| T18 | Owner response / close | `UPDATE shots` | `response_score` (✔️ 1–99, anchored: 1 none · 20 ack · 40 question · 60 interest · 80 verbal yes · 99 closed), `status='responded'/'closed'` |
+| **T-B** | **Before ANY generation** | Check `v_budget_status` for the producer | if remaining < tier cost → stop, escalate to Collin (reserve decision) |
+| **T∀** | **After ANY write above** | **`py _Tools\xmotion_materialize.py`** | refreshes all 6 dashboards + rematerializes shot filenames from DB truth |
 
 ## 2. Computed-at-write values (X does the math, SQLite stays portable)
 
 - `quality_sd  = round(sqrt(ambiguity * noise), 2)`
 - `shot_potential (ⲱ) = round(sqrt(model_quality_pctile * shot_quantity_pctile), 1)`
 - `shot_resonance (Ѡ) = round(output_quality * shot_potential)`
+- `efficiency (⚡) = round(sqrt(quality_eff * response_score) / credits_used, 2)` — quality_eff = ֎ final when present, else ֎🇦🇮 AI. Computed by the materializer (portable sqrt); **compare within tier only**.
 - Verdict bands: PASS ≤ 2.0 · MAYBE 2.0–3.5 · FAIL > 3.5 (SD gate — see Shot-Quality-Equation skill)
-- Labels: ⲱ = Shot Potential (*Before*) · Ⲱ = Shot Yield (*After*) · Ѡ = Shot Resonance (*Balanced*)
+- Labels: ⲱ = Shot Potential (*Before*) · Ⲱ = Shot Yield (*After*) · Ѡ = Shot Resonance (*Balanced*) · ֎🇦🇮/֎ = shot quality AI/final · ✔️ = response · 🔗 = credits-to-viable · ⚡ = efficiency
 
 ## 3. S rotation reflex (T1 detail)
 
@@ -67,16 +74,25 @@ Read `config.s_next_index` → assign `s_rotation[index]` → advance index (mod
 | Which pacing (S) sells? | `v_s_performance` | Images x Seconds |
 | Which duration bucket sells? | `v_duration_performance` | Images x Seconds |
 | Which N×S cell sells? | `v_grid_cell` | Images x Seconds (heatmap) |
-| How is each VA performing (ops + commission)? | `v_va_scorecard` | Shot Quality |
-| Which VA produces the best output? (avg Ⲱ, avg Ѡ) | `v_va_shot_scoring` | **Shot Scoring** |
-| Which model earns its credits? (WBS 4.3) | `v_model_scoring` | **Shot Scoring** |
-| Per-shot score ledger | `v_shot_scoring` | Shot Scoring (recent 25) |
+| How is each VA performing (ops + commission)? | `v_va_scorecard` | **Shot Quality Scoring** |
+| Which VA produces the best output? (avg Ⲱ, avg Ѡ) | `v_va_shot_scoring` | **Shot Quality Scoring** |
+| Which model earns its credits? (WBS 4.3) | `v_model_scoring` | **Shot Quality Scoring** |
+| Per-shot score ledger (listing layer) | `v_shot_scoring` | Shot Quality Scoring (recent 25) |
+| Who produces efficient shots, per tier? (⚡ ablation) | `v_shot_efficiency` | **Shot Quality Scoring** |
+| What awaits Collin's final ֎ review? | `v_shot_efficiency` (review queue) | **Shot Quality Scoring** |
+| Does the SD gate predict conversion? | `v_quality_vs_outcome` | **Shot Quality Scoring** |
+| Capacity + abandonment guardrails | `v_monthly_ops` | **Shot Quality Scoring** |
+| How much budget remains, per producer? | `v_budget_status` | **Production & Distribution** |
+| Which preview tier gets responses? (A/B) | `v_tier_ab` | **Production & Distribution** |
 | Which market converts? | `v_location_performance` | Locations |
-| Does the SD gate predict conversion? | `v_quality_vs_outcome` | Shot Quality |
-| Which frame/content/border combo sells? | `v_format_combo` | **Format & Overlay** |
-| Which overlay placement sells? | `v_overlay_performance` | **Format & Overlay** |
+| Which frame/content/border combo sells? | `v_format_combo` | Format & Overlay |
+| Which overlay placement sells? | `v_overlay_performance` | Format & Overlay |
 | Which X-Factors show up in wins? | `v_x_factor_performance` | X-Factor Relativity |
-| Capacity + abandonment guardrails | `v_monthly_ops` | Shot Quality |
+
+> **One metric, one home:** `Shot Quality Scoring` is the single scoring master —
+> the full ladder (SD gate → ⲱ/Ⲱ/Ѡ → ֎/✔️/🔗/⚡). `Production & Distribution` is
+> budgets + tier A/B outreach only. The old `Shot Quality` and `Shot Scoring`
+> dashboards are retired (2026-07-04) — merged into Shot Quality Scoring.
 
 ## 5. Guardrails
 
