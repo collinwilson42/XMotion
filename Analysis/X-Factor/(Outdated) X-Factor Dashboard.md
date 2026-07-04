@@ -1,4 +1,4 @@
-# X-Factor Relativity Dashboard
+# X-Factor Dashboard
 
 > Materialized from `XMotion.db` at 2026-07-04 12:16 by xmotion_materialize.py. Do not hand-edit - regenerate instead.
 >
