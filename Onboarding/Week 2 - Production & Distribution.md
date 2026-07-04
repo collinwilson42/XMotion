@@ -45,7 +45,7 @@ Credits are the unit of trust. Producers hold budgets, not shot counts.
 | Collin | 40% | 459.0 |
 | Jaisa | 20% | 229.5 |
 | Richlan | 20% | 229.5 |
-| House reserve | 20% | 229.5 (unallocated — regens gone wrong, experiments, WIZX-flagged saves) |
+| House reserve | 20% | 229.5 — three sanctioned uses: (1) finishing production on previews that draw owner interest, (2) onboarding a potential new partner, (3) a performance raise to the prior month's highest-⚡ producer |
 
 Budgets live in `budget_allocations`; spend accrues from `shots.credits_used`;
 the Production & Distribution Dashboard shows remaining in real time. A regen
