@@ -97,7 +97,7 @@ anchors are spaced to keep discrimination at the dangerous end.
 
 | Glyph | Codepoint  | Name                | Formula                                                         | Phase                                                 |
 | :---: | ---------- | ------------------- | --------------------------------------------------------------- | ----------------------------------------------------- |
-|   ⲱ   | U+2CB1     | **Shot Potential**  | Catalog / 10, capped at 99                                      | *Before* — what the keeper set puts on the table      |
+|   ⲱ   | U+2CB1     | **Shot Potential**  |                                                                 | *Before* — what the keeper set puts on the table      |
 |   Ⲱ   | U+2CB0     | **Shot Yield**      | Output Video Quality, 1–100, judged on the rendered walkthrough | *After* — what the render delivered                   |
 |   Ѡ   | U+0460     | **Shot Resonance**  | Ⲱ × ⲱ (range 1–10,000)                                          | *Balanced* — high only when a strong setup also lands |
 | **⊜** | **U+229C** | **Set Degradation** | **√(Avg_Ambiguity × Avg_Noise), 1–99**                          | **Pre-Shot Gate**                                     |
@@ -121,61 +121,12 @@ post-edit, pending review) → ֎ Collin-final (1–99) · ✔️ response inter
 `Onboarding\Week 2 - Production & Distribution.md` §7; triggers T14–T18 in
 `XMotion-Automated-Tracking.md`.
 
-**Post-shot scoring reflex:** the moment keepers are scored, write the SD
+**Post-shot scoring reflex:** the moment keepers are scored, write the ⊜
 factors and `shot_potential` (ⲱ); the moment the rendered video is reviewed,
-write `output_quality` (Ⲱ) and `shot_resonance` (Ѡ = Ⲱ·ⲱ), then run the
+write `output_quality` (Ⲱ) and `shot_resonance` (Ѡ = Ⲱ · ⲱ), then run the
 materializer. Dashboard: `Analysis\Shot Quality Scoring` (the merged scoring
 master). Full trigger map: `AI Skills\XMotion-Automated-Tracking.md`.
 
----
-
-## Scouting Protocol
-
-When asked to **scout** a capture folder, WIZX does the following, in order:
-
-1. **Locate the block.** `Captures\<YYYY-MM-DD>\<BLOCK>\` (e.g. `PM_3-59_4-04`).
-2. **Read `_manifest.md`** for image count, resolutions, and coarse LOW-RES flags.
-3. **Read the thumbnails from `TN_<BLOCK>\`** — always the `TN_` thumbnails,
-   never the full-resolution PNGs (PNGs exceed the media read limit; thumbnails
-   are the AI-readable layer the capture parser writes automatically).
-4. **Segment the set** into *unit-flow* (the dwelling, room by room) vs.
-   *amenity B-roll* (gym, pool, lobby, exterior); note redundant duplicate angles.
-5. **Score** Ambiguity (1–99) and Noise (1–99) from thumbnails + manifest;
-   compute `SD = √(Ambiguity × Noise)`. For a full pass, run the Image Scorer
-   per frame — the block gate and the per-image scores share the same factors.
-6. **Report**: factor scores, SD, Pass/Maybe/Fail verdict, and concrete prep
-   actions (keepers for the walkthrough, B-roll holds, drops).
-
-The manifest LOW-RES flag is only a hint; visual judgement from the thumbnails
-governs the Noise score.
-
----
-
-## Worked example — block `2026-06-27 / PM_3-59_4-04` (19 images)
-
-- **Noise = 20** — all 1440×960-class gallery exports, sharp and clean; only
-  knock is downsizing vs. MLS masters (caps 4K headroom). Sits between the
-  pristine (10) and clean-gallery (25) anchors.
-- **Ambiguity = 40 (Moderate)** — one open-plan studio (001/005/010 same space,
-  multiple angles) mixed with rooftop amenities (016 gym, 017 pool). Needs
-  segmentation into unit-flow vs. amenity B-roll, plus dedup.
-- **SD = √(40 × 20) ≈ 28.3 → MAYBE.** Segment + dedup, then generate.
-
-*(Same block, same verdict as under the retired scale — the rescale is
-semantics-preserving.)*
-
----
-
-## Retired — EST = MV/SD (2026-07-04, Collin directive)
-
-The original model-selection equation `EST = MV / SD` with
-`MV = √(Model-Quality %ile × Shot-Quantity %ile)` is **retired for good**,
-along with its doubling ambiguity scale (1–16), linear noise scale (1–5), and
-the never-locked EST gate thresholds. It was superseded before ever scoring
-real data: the Image Scorer v2 equation covers the numerator's job with
-factors we can actually judge per frame, and model ranking runs on realized Ѡ
-instead of an assigned ceiling. Historical rows (3 listings, Austin batch)
-were rescaled to 1–99 on retirement with verdicts unchanged.
 
 ---
 
