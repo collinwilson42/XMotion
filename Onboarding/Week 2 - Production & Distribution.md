@@ -160,15 +160,36 @@ This is how Claude gets real video-editing access: not a GUI, a script layer.
 | T16 | Response scored (day 3 / day 7) | UPDATE `response_score`, `status` |
 | T∀ | After any of the above | run materializer (dashboards + filename sync) |
 
-## 9. Month Goal & Success Criteria
+## 9. Month One Goal & Proof of Concept Expansion Into Month Two 
 
-**Goal: ≥1 closed sale in July.** Supporting numbers: budget supports ~35–43
-previews clean (~29 with heavy regen); at even a 10% response-to-deal rate the
-funnel closes. Weekly checkpoints: sends per tier on pace, response rate by
-tier readable at 5+ sends, ⚡ leaders identified by producer, Findings Log
-growing every session. One genuine risk, stated once: pro-mode keeper rate is
-built on a small sample — the first two group sessions true up the real
-regen multiplier, and budgets absorb it either way.
+**Month 1 goal: ≥1 closed company sale in July.** Supporting numbers: budget
+supports ~35–43 previews clean (~29 with heavy regen); at even a 10%
+response-to-deal rate the funnel closes. Weekly checkpoints: sends per tier on
+pace, response rate by tier readable at 5+ sends, ⚡ leaders identified by
+producer, Findings Log growing every session. One genuine risk, stated once:
+pro-mode keeper rate is built on a small sample — the first two group sessions
+true up the real regen multiplier, and budgets absorb it either way.
+
+**The stakes, stated plainly: July is the proof-of-concept month.** One sale
+proves the machine — sourcing → gate → preview → response → close — works end
+to end. We pass or we fail. If we fail in month 1, we kill it. We won't fail.
+
+**What one sale unlocks (Month 2 — Proof of Concept Expansion):** the account
+upgrades to **Ultra (3,200 credits/mo)** and everyone's limits expand for more
+reps:
+
+| Producer | Month 1 (1,147.5 cr) | Month 2 Ultra (3,200 cr)* | Reps (previews/mo) |
+|---|---|---|---|
+| Collin | 40% · 459.0 | 30% · 960 | ~17 → ~37 |
+| Jaisa | 20% · 229.5 | **25% · 800** | ~9 → ~30 |
+| Richlan | 20% · 229.5 | **25% · 800** | ~9 → ~30 |
+| House reserve | 20% · 229.5 | 20% · 640 | — |
+
+*Month 2 split proposed (VA 25% each per the growth ladder is locked; Collin/
+reserve shares adjustable). Reps estimated at the ~26.25-credit blended preview
+cost — each VA roughly **triples their monthly reps**, which is the point:
+proof of concept buys practice volume, practice volume buys efficiency, and ⚡
+numbers from Month 2 set the Month 3 allocations.
 
 ## 10. Run Order (Collin, once, to activate)
 
