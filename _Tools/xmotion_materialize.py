@@ -141,7 +141,7 @@ def main():
     body = header("Locations Dashboard",
                   "conversion green at 30%+, red at 0. SD inverted: low SD = green.")
     styled = [[r[0], r[1], r[2], r[3],
-               chip(r[4], 1.0, 3.5, invert=True, fmt="{:.2f}") if r[4] is not None else None,
+               chip(r[4], 10, 40, invert=True, fmt="{:.2f}") if r[4] is not None else None,
                r[5], r[6],
                bar(r[7], 0.0, 0.30, fmt="{:.1%}") if r[7] is not None else None,
                f"${r[8]:,.0f}" if r[8] else "-"] for r in rows]
@@ -201,7 +201,7 @@ def main():
                   "\u0460 Resonance green at 7000+. \u26A1 efficiency green at 4+. "
                   "SD inverted: low = green.")
     body += ("> **The scoring ladder (one document, every layer):**\n"
-             "> 1. **Gate** — SD = \u221a(Ambiguity \u00d7 Noise) \u00b7 PASS \u2264 2.0 \u00b7 MAYBE \u2264 3.5 \u00b7 FAIL > 3.5 — spend nothing on a FAIL.\n"
+             "> 1. **Gate** — SD = \u221a(Ambiguity \u00d7 Noise), both 1–99 \u00b7 PASS \u2264 25 \u00b7 MAYBE \u2264 40 \u00b7 FAIL > 40 — spend nothing on a FAIL.\n"
              "> 2. **Listing layer** — \u2CB1 Potential = \u221a(Model-Quality %ile \u00d7 Shot-Quantity %ile) (*Before*) \u00b7\u00b7 "
              "\u2CB0 Yield = Output Video Quality 1\u2013100 (*After*) \u00b7\u00b7 \u0460 Resonance = \u2CB0 \u00d7 \u2CB1 (*Balanced*).\n"
              "> 3. **Shot layer (Week 2)** — \u058e\U0001F1E6\U0001F1EE AI quality 1\u201399 (pending review) \u00b7 \u058e Collin-final 1\u201399 \u00b7 "
@@ -220,7 +220,7 @@ def main():
                         " FROM v_va_scorecard")
     styled = [[r[0], r[1], r[2], r[3],
                chip(r[4], 0.0, 0.30, invert=True, fmt="{:.1%}") if r[4] is not None else None,
-               chip(r[5], 1.0, 3.5, invert=True, fmt="{:.2f}") if r[5] is not None else None,
+               chip(r[5], 10, 40, invert=True, fmt="{:.2f}") if r[5] is not None else None,
                r[6], r[7],
                bar(r[8], 0.0, 0.30, fmt="{:.1%}") if r[8] is not None else None,
                f"${r[9]:,.2f}" if r[9] else "-"] for r in rows]
@@ -233,7 +233,7 @@ def main():
                bar(r[2], 40, 85, fmt="{:.1f}") if r[2] is not None else None,
                bar(r[3], 40, 85, fmt="{:.1f}") if r[3] is not None else None,
                bar(r[4], 1600, 7000, fmt="{:,.0f}") if r[4] is not None else None,
-               chip(r[5], 1.0, 3.5, invert=True, fmt="{:.2f}") if r[5] is not None else None]
+               chip(r[5], 10, 40, invert=True, fmt="{:.2f}") if r[5] is not None else None]
               for r in rows]
     body += table(["VA", "Scored", "Avg \u2CB1 Potential", "Avg \u2CB0 Yield",
                    "Avg \u0460 Resonance", "Avg SD"], styled)

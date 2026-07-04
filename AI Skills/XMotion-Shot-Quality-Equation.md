@@ -2,150 +2,130 @@
 title: XMotion — Shot Quality Equation
 type: ai-skill
 domain: scoring
-status: draft
-version: 0.7
+status: live
+version: 1.0
 updated: 2026-07-04
-tags: [xmotion, scoring, EST, shot-quality, listing-gate, set-degradation]
+tags: [xmotion, scoring, shot-quality, listing-gate, set-degradation, image-scorer]
 maintainer: XMotion Studio
 name: XMotion Shot Quality Equation
-description: The canonical scoring contract and listing gate. Use when scoring a captured photo set, scouting a capture block off disk, ranking Higgsfield models, scoring a rendered output video, or deciding pass/maybe/fail before any credits are spent. Trigger on score, scout, grade, SD, EST, quality, gate, potential, yield, resonance, the glyphs ⲱ Ⲱ Ѡ, or any capture-block or output review. Defines EST = MV / SD, the glyph layer ⲱ (Shot Potential, Before) / Ⲱ (Shot Yield, After) / Ѡ (Shot Resonance, Balanced), the ambiguity doubling scale (1-16), the linear noise scale (1-5), the SD listing gate verdicts, the post-shot scoring reflex, and the step-by-step scouting protocol over TN_ thumbnails.
+description: The canonical scoring contract and listing gate. Use when scoring a captured photo set, scouting a capture block off disk, scoring a rendered output video, or deciding pass/maybe/fail before any credits are spent. Trigger on score, scout, grade, SD, quality, gate, potential, yield, resonance, the glyphs ⲱ Ⲱ Ѡ, or any capture-block or output review. Canonical equation is the Image Scorer v2 form — Score = √(Flow × Quality × Location × MoneyShot) / √(Ambiguity × Noise), all six factors 1–99. Defines the block-level SD gate (SD = √(Ambiguity × Noise), PASS ≤ 25 / MAYBE ≤ 40 / FAIL > 40), the glyph ladder ⲱ (Shot Potential, Before) / Ⲱ (Shot Yield, After) / Ѡ (Shot Resonance, Balanced), the post-shot scoring reflex, and the scouting protocol over TN_ thumbnails. The old EST = MV/SD formula is RETIRED (2026-07-04).
 tools: filesystem
 growth:
-  - Lock EST gate thresholds once model MV is assigned (open item, WBS 4.3)
-  - Tune noise and ambiguity rubric anchors against more real capture blocks
+  - Calibrate the 1–99 rubric anchors and gate bands against real capture blocks
+  - Calibrate the ⲱ = Catalog/10 normalization once scored shots accumulate
   - Auto-noise estimation from edge size and JPEG quantization in a later parser pass
   - Amenity tag at capture time so segmentation is recorded, not inferred
-  - Decide whether Ѡ gains an SD divisor (Ѡ = Ⲱ·ⲱ/SD) once real scored shots accumulate
-  - Consider √(Ⲱ·ⲱ) normalization if the 1-10,000 Ѡ range proves unwieldy in review
+  - Decide whether Ѡ gains an SD divisor once real scored shots accumulate
 ---
 
 # XMotion — Shot Quality Equation
 
-> **Status:** v0.5-DRAFT — updated 2026-06-27. Core form LOCKED; EST gate
-> thresholds OPEN (calibrate against model MV). Shared-team reference: the
-> canonical scoring contract (for the Claude account) and the listing gate
-> (for VAs). Keep it professional.
+> **Status:** v1.0 — 2026-07-04. **EST = MV/SD is retired for good.** The Image
+> Scorer v2 equation is the single canonical scoring form; Ambiguity and Noise
+> are now 1–99 like every other factor in the system. One scale family,
+> everywhere: 1–99 desirability up top, 1–99 uncertainty below, geometric means
+> on both sides.
 
 ---
 
-## The Glyph Layer (v0.6) — Before / After / Balanced
-
-The MV numerator now carries a glyph and is recorded **per shot**, not only per
-model, and a post-render score closes the loop:
-
-| Glyph | Codepoint | Name | Formula | Phase |
-|:-----:|-----------|------|---------|-------|
-| ⲱ | U+2CB1 | **Shot Potential** | √(Model-Quality %ile × Shot-Quantity %ile), P1–P100 each | *Before* — what the setup puts on the table |
-| Ⲱ | U+2CB0 | **Shot Yield** | Output Video Quality, 1–100, judged on the rendered walkthrough | *After* — what the render delivered |
-| Ѡ | U+0460 | **Shot Resonance** | Ⲱ × ⲱ (range 1–10,000) | *Balanced* — high only when a strong setup also lands |
-| SD | — | Set Degradation | √(Ambiguity × Noise) — unchanged, the input gate divisor | *Gate* |
-
-**Week 2 shot layer (2026-07-04)** — per produced *preview shot* (the `shots` table), downstream of the listing layer above: ֎🇦🇮 AI quality (1–99 percentile, post-edit, pending review) → ֎ Collin-final (1–99) · ✔️ response interest (1–99, 1 = none) · 🔗 credits-to-viable (incl. regens) · **⚡ = √(֎ × ✔️) / 🔗** (final when present, else AI; within-tier comparison only). Full contract: `Onboarding\Week 2 - Production & Distribution.md` §7; triggers T14–T18 in `XMotion-Automated-Tracking.md`.
-
-ⲱ **is** MV — same geometric mean, now stamped onto each listing row at shot time
-so per-VA and per-model averages accumulate automatically. EST = ⲱ/SD remains the
-pre-spend gate; Ѡ is the *learning* metric that ranks models (WBS 4.3) and VAs on
-realized output. Ⲱ is judged by the Claude account against the walkthrough-realism
-criteria in the MV rubric below (spatial coherence, camera motion, texture/lighting
-fidelity, no hallucinated geometry) — applied to the actual output, not the ceiling.
-
-**Post-shot scoring reflex:** the moment a shot result is recorded, write
-`model_quality_pctile`, `shot_quantity_pctile`, `shot_potential` (ⲱ); the moment the
-rendered video is reviewed, write `output_quality` (Ⲱ) and `shot_resonance` (Ѡ = Ⲱ·ⲱ),
-then run the materializer. Dashboards: `Analysis\Shot Quality Scoring` (the merged
-scoring master, 2026-07-04 — replaces the retired Shot Quality + Shot Scoring pages).
-Full trigger map: `AI Skills\XMotion-Automated-Tracking.md`.
-
-> **Scale note — RESOLVED 2026-07-04:** a draft restatement had drifted the factor
-> tables to 1–10 linear. The locked contract is **Ambiguity doubling (1/2/4/8/16) ×
-> Noise linear (1–5)**; the tables below have been rebased back to it. The gate
-> bands (PASS ≤ 2.0 · MAYBE ≤ 3.5 · FAIL > 3.5) depend on these scales.
-
----
-
-## Purpose
-
-One equation, two jobs:
-
-1. **Model selection** — rank the Higgsfield models for the walkthrough use case.
-2. **Listing gate** — decide whether a captured photo set is worth a shot, before any credits are spent.
-
-The Claude account is the **judge of picture quality**: it scouts the captured block off disk and scores the denominator. The numerator is a property of the chosen model, assigned once per model.
-
----
-
-## The Equation
+## The Canonical Equation (Image Scorer v2 — one form, every level)
 
 ```
-EST Shot Quality  =  MV / SD
-
-  MV (Model Value)      = sqrt( Model-Quality %ile  x  Shot-Quality %ile )    1–99 each, higher = better
-  SD (Set Degradation)  = sqrt( Ambiguity  x  Noise )                          higher = worse, min 1
+Score = √( Flow × Quality × Location × MoneyShot )  /  √( Ambiguity × Noise )
 ```
 
-Both sides are geometric means. The numerator is *goodness percentiles*; the
-denominator is *badness multipliers*. A clean set (SD → 1) lets the model score
-through at full value; a degraded or ambiguous set divides it down.
+All six factors are **1–99 integers**. Applied per image by the Image Scorer
+(`AI Skills\XMotion-Image-Scorer.md` — the full rubric, bridges, and keep rule
+live there). Averaged over a block, the same form yields the **Catalog score**:
 
-**Intentional asymmetry:** Ambiguity runs on a wider **doubling** scale (1–16)
-while Noise stays **linear** (1–5). This weights ambiguity heavier on purpose —
-it is the dominant failure mode for real-estate photo sets (clean galleries make
-noise a minor factor), and the doubling scale survives the square root with real
-discrimination at the dangerous end, where a linear scale would collapse.
+```
+Catalog = √( avgFlow × avgQual × avgLoc × avgMoney ) / √( avgAmb × avgNoise )
+```
 
----
+The **denominator alone** is the pre-spend gate; the **full ratio** is the
+potential measure. Same fraction, two jobs.
 
-## Numerator — MV (the model, assigned once per model)
+## The SD Gate (block level — spend nothing on a FAIL)
 
-- **Model-Quality %ile (1–99):** projected walkthrough-realism ceiling — interior spatial coherence (walls/furniture do not warp), smooth dolly/pan camera motion, texture/lighting fidelity, no hallucinated geometry. Best-case output, not consistency.
-- **Shot-Quantity %ile (1–99):** credit efficiency at target settings — how many usable shots the plan budget buys. Cheap fast/turbo variants score high; pro/4k/preview modes score low. Minimum-duration overhead counts against a model when the per-clip target is short.
+```
+SD = √( Ambiguity × Noise )        both 1–99, higher = worse
+```
 
----
+| SD range | Verdict   | Action                                                                                  |
+| -------- | --------- | --------------------------------------------------------------------------------------- |
+| ≤ 25     | **PASS**  | Shoot as-is. *Optimal zone: SD ≤ 15 (unambiguous + clean)*                              |
+| 25–40    | **MAYBE** | Viable after prep — segment unit vs. amenity, drop redundant angles, then shoot         |
+| > 40     | **FAIL**  | Abandon — log `ABANDONED – IMAGE QUALITY` or `ABANDONED – AMBIGUITY`; do not burn shots |
 
-## Denominator — SD (the photos; the Claude account judges per block)
+*(Bands are the old PASS ≤ 2.0 / ≤ 3.5 semantics mapped onto 1–99 — every
+historical verdict survives the rescale unchanged. Draft anchors; calibrate
+against real blocks.)*
 
-### Ambiguity — doubling scale (1/2/4/8/16), weighted heavier on purpose
+### Ambiguity — 1–99 rubric anchors
 
 Sequencing / interpretive uncertainty for a coherent walkthrough.
 
-| Level           | Weight | Meaning                                                                                                      |
-| --------------- | :----: | ------------------------------------------------------------------------------------------------------------ |
-| Unambiguous     | **1**  | Clear room-by-room set, single subject (the unit), readable spatial flow                                     |
-| Minor           |   2    | A couple of redundant angles or one stray shot                                                               |
-| Moderate        |   4    | Mixed clusters needing segmentation (unit vs. amenity), redundant duplicate angles, or unclear room function |
-| Heavy           |   8    | Many occluded/cluttered/mirror shots, rooms hard to tell apart, conflicting layouts                          |
-| Uninterpretable |   16   | The space cannot be reconstructed; the model will hallucinate                                                |
+| Anchor | Level           | Meaning                                                                                                      |
+| :----: | --------------- | ------------------------------------------------------------------------------------------------------------ |
+| **10** | Unambiguous     | Clear room-by-room set, single subject (the unit), readable spatial flow                                     |
+| **25** | Minor           | A couple of redundant angles or one stray shot                                                               |
+| **40** | Moderate        | Mixed clusters needing segmentation (unit vs. amenity), duplicate angles, or unclear room function           |
+| **70** | Heavy           | Many occluded/cluttered/mirror shots, rooms hard to tell apart, conflicting layouts                          |
+| **95** | Uninterpretable | The space cannot be reconstructed; the model will hallucinate                                                |
 
-### Noise — linear scale (1–5)
+### Noise — 1–99 rubric anchors
 
 Signal-level degradation. *(Coarse auto-proxy: manifest LOW-RES flag, edge < 720px.)*
 
-| Score | Meaning                                                                                   |
-| :---: | ----------------------------------------------------------------------------------------- |
-|   1   | Pristine — 1600px+ shortest edge, sharp, correct exposure/color, no artifacts or overlays |
-|   2   | Clean gallery — 720–1600px, sharp, mild downsizing                                        |
-|   3   | Soft — visible compression/blur, mild over/under-exposure, or under 720px                 |
-|   4   | Degraded — heavy artifacts, motion blur, watermarks/text overlays, fisheye distortion     |
-|   5   | Unusable — tiny, severe artifacts, illegible                                              |
+| Anchor | Meaning                                                                                   |
+| :----: | ----------------------------------------------------------------------------------------- |
+| **10** | Pristine — 1600px+ shortest edge, sharp, correct exposure/color, no artifacts or overlays |
+| **25** | Clean gallery — 720–1600px, sharp, mild downsizing                                        |
+| **40** | Soft — visible compression/blur, mild over/under-exposure, or under 720px                 |
+| **70** | Degraded — heavy artifacts, motion blur, watermarks/text overlays, fisheye distortion     |
+| **95** | Unusable — tiny, severe artifacts, illegible                                              |
+
+Reading the bands with the anchors: minor ambiguity (≤ 25) can only FAIL against
+badly degraded photos; moderate ambiguity (40) passes only with pristine photos
+and otherwise lands MAYBE; heavy ambiguity (70+) fails the moment noise leaves
+the pristine zone. Ambiguity remains the dominant failure mode by design — the
+anchors are spaced to keep discrimination at the dangerous end.
 
 ---
 
-## Listing Gate (VA-facing) — score SD on the captured block
+## The Glyph Ladder — Before / After / Balanced
 
-`SD = sqrt(Ambiguity × Noise)`:
+| Glyph | Codepoint | Name | Formula | Phase |
+|:-----:|-----------|------|---------|-------|
+| ⲱ | U+2CB1 | **Shot Potential** | Catalog / 10, capped at 99 | *Before* — what the keeper set puts on the table |
+| Ⲱ | U+2CB0 | **Shot Yield** | Output Video Quality, 1–100, judged on the rendered walkthrough | *After* — what the render delivered |
+| Ѡ | U+0460 | **Shot Resonance** | Ⲱ × ⲱ (range 1–10,000) | *Balanced* — high only when a strong setup also lands |
+| SD | — | Set Degradation | √(Ambiguity × Noise), 1–99 | *Gate* |
 
-| SD range   | Verdict   | Action                                                                                  |
-| ---------- | --------- | --------------------------------------------------------------------------------------- |
-| ≤ 2.0      | **PASS**  | Shoot as-is. *Optimal zone: SD ≤ 1.5 (unambiguous + clean)*                             |
-| 2.0–3.5    | **MAYBE** | Viable after prep — segment unit vs. amenity and drop redundant angles, then shoot      |
-| > 3.5      | **FAIL**  | Abandon — log `ABANDONED – IMAGE QUALITY` or `ABANDONED – AMBIGUITY`; do not burn shots |
+**ⲱ is now derived from the canonical equation** — the Catalog score of the
+keeper set, normalized to 1–99 (÷10, cap 99; a strong clean block lands in the
+80s, a mediocre one in the 20s — draft normalization, calibrate as data lands).
+The old ⲱ = √(Model-Quality %ile × Shot-Quantity %ile) is retired with MV; the
+`model_quality_pctile` / `shot_quantity_pctile` columns remain in the DB as
+legacy (never populated on real data).
 
-Reading the bands: minor ambiguity (≤2) can never Fail; moderate ambiguity (4)
-passes only with clean photos and otherwise lands in Maybe; heavy/uninterpretable
-ambiguity (8/16) Fails the moment any noise is present. The VA controls only SD
-(the photos), not MV (the model is fixed per project), so the **listing gate is
-the divisor**. The full EST fraction is used for model ranking and borderline
-spot-checks.
+**Model ranking (WBS 4.3) is now purely empirical:** models are ranked on
+realized Ѡ in `v_model_scoring` — no assigned MV, no pending thresholds. The
+D-3 open decision closes with this retirement.
+
+**Week 2 shot layer** — per produced *preview shot* (the `shots` table),
+downstream of the listing layer above: ֎🇦🇮 AI quality (1–99 percentile,
+post-edit, pending review) → ֎ Collin-final (1–99) · ✔️ response interest
+(1–99, 1 = none) · 🔗 credits-to-viable (incl. regens) · **⚡ = √(֎ × ✔️) / 🔗**
+(final when present, else AI; within-tier comparison only). Full contract:
+`Onboarding\Week 2 - Production & Distribution.md` §7; triggers T14–T18 in
+`XMotion-Automated-Tracking.md`.
+
+**Post-shot scoring reflex:** the moment keepers are scored, write the SD
+factors and `shot_potential` (ⲱ); the moment the rendered video is reviewed,
+write `output_quality` (Ⲱ) and `shot_resonance` (Ѡ = Ⲱ·ⲱ), then run the
+materializer. Dashboard: `Analysis\Shot Quality Scoring` (the merged scoring
+master). Full trigger map: `AI Skills\XMotion-Automated-Tracking.md`.
 
 ---
 
@@ -153,30 +133,59 @@ spot-checks.
 
 When asked to **scout** a capture folder, WIZX does the following, in order:
 
-1. **Locate the block.** It lives at `Captures\<YYYY-MM-DD>\<BLOCK>\` (e.g. `PM_3-59_4-04`).
-2. **Read `_manifest.md`** for the image count, resolutions, and coarse LOW-RES flags.
-3. **Read the thumbnails from `TN_<BLOCK>\`** — e.g. `TN_PM_3-59_4-04\001.jpg`. Always read the `TN_` thumbnails, never the full-resolution PNGs: the PNGs exceed the media read size limit, the thumbnails do not. The `TN_` folder is the AI-readable layer the capture parser writes automatically.
-4. **Segment the set** into *unit-flow* (the dwelling, room by room) vs. *amenity B-roll* (gym, pool, lobby, exterior); note redundant duplicate angles.
-5. **Score** Ambiguity (1/2/4/8/16) and Noise (1–5) from the thumbnails + manifest; compute `SD = sqrt(Ambiguity × Noise)`.
-6. **Report**: per-factor scores, SD, the Pass/Maybe/Fail verdict, and the concrete prep actions (which frames to keep for the walkthrough, which to hold as B-roll, which to drop).
+1. **Locate the block.** `Captures\<YYYY-MM-DD>\<BLOCK>\` (e.g. `PM_3-59_4-04`).
+2. **Read `_manifest.md`** for image count, resolutions, and coarse LOW-RES flags.
+3. **Read the thumbnails from `TN_<BLOCK>\`** — always the `TN_` thumbnails,
+   never the full-resolution PNGs (PNGs exceed the media read limit; thumbnails
+   are the AI-readable layer the capture parser writes automatically).
+4. **Segment the set** into *unit-flow* (the dwelling, room by room) vs.
+   *amenity B-roll* (gym, pool, lobby, exterior); note redundant duplicate angles.
+5. **Score** Ambiguity (1–99) and Noise (1–99) from thumbnails + manifest;
+   compute `SD = √(Ambiguity × Noise)`. For a full pass, run the Image Scorer
+   per frame — the block gate and the per-image scores share the same factors.
+6. **Report**: factor scores, SD, Pass/Maybe/Fail verdict, and concrete prep
+   actions (keepers for the walkthrough, B-roll holds, drops).
 
-The manifest LOW-RES flag is only a hint; the visual judgement from the thumbnails governs the Noise score.
+The manifest LOW-RES flag is only a hint; visual judgement from the thumbnails
+governs the Noise score.
 
 ---
 
 ## Worked example — block `2026-06-27 / PM_3-59_4-04` (19 images)
 
-- **Noise = 1.7** — all 1440×960-class gallery exports, sharp and clean; only knock is downsizing vs. MLS masters (caps 4K headroom). At the 720 flag threshold, none of this block flags.
-- **Ambiguity = 4 (Moderate)** — set mixes one open-plan studio (001/005/010 are the same space from multiple angles) with rooftop amenities (016 gym, 017 pool). Needs segmentation into unit-flow vs. amenity B-roll, plus dedup of redundant studio angles.
-- **SD = sqrt(4 × 1.7) ≈ 2.61 → MAYBE.** Segment + dedup, then generate.
+- **Noise = 20** — all 1440×960-class gallery exports, sharp and clean; only
+  knock is downsizing vs. MLS masters (caps 4K headroom). Sits between the
+  pristine (10) and clean-gallery (25) anchors.
+- **Ambiguity = 40 (Moderate)** — one open-plan studio (001/005/010 same space,
+  multiple angles) mixed with rooftop amenities (016 gym, 017 pool). Needs
+  segmentation into unit-flow vs. amenity B-roll, plus dedup.
+- **SD = √(40 × 20) ≈ 28.3 → MAYBE.** Segment + dedup, then generate.
 
-*(Sample basis: 6 of 19 viewed. A full-set scout will lock the number.)*
+*(Same block, same verdict as under the retired scale — the rescale is
+semantics-preserving.)*
+
+---
+
+## Retired — EST = MV/SD (2026-07-04, Collin directive)
+
+The original model-selection equation `EST = MV / SD` with
+`MV = √(Model-Quality %ile × Shot-Quantity %ile)` is **retired for good**,
+along with its doubling ambiguity scale (1–16), linear noise scale (1–5), and
+the never-locked EST gate thresholds. It was superseded before ever scoring
+real data: the Image Scorer v2 equation covers the numerator's job with
+factors we can actually judge per frame, and model ranking runs on realized Ѡ
+instead of an assigned ceiling. Historical rows (3 listings, Austin batch)
+were rescaled to 1–99 on retirement with verdicts unchanged.
 
 ---
 
 ## Open / to calibrate
 
-- **EST gate thresholds** — pending model MV assignment (the Higgsfield ranking). Once the top model's MV is fixed, set Pass/Maybe/Fail bands on EST itself, in addition to the SD listing gate above.
-- **Rubric anchors** — Noise/Ambiguity tables are draft; tune against more real blocks.
-- **Auto-noise** — the manifest edge-flag is a coarse Noise proxy; consider auto-estimating Noise (1–5) from edge + JPEG quantization in a later parser pass.
-- **Amenity tag** — consider a capture-time tag (unit / amenity) so segmentation is recorded at copy time rather than inferred later.
+- **Rubric anchors + gate bands** — 1–99 anchors and PASS ≤ 25 / MAYBE ≤ 40 /
+  FAIL > 40 are drafts; tune against more real blocks.
+- **ⲱ normalization** — Catalog/10 cap 99 is a draft; recheck once dashboards
+  hold 20+ scored shots.
+- **Auto-noise** — consider auto-estimating Noise from edge + JPEG quantization
+  in a later parser pass.
+- **Amenity tag** — capture-time unit/amenity tag so segmentation is recorded,
+  not inferred.
