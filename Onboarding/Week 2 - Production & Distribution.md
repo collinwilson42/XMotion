@@ -23,7 +23,7 @@ listing at a time. Speed comes after the process is clean.
 
 ## Part 1 — The Image Scorer
 
-Every photo block gets scored **before a single credit moves**. The Image Scorer
+Every photo block gets scored **before any credit is spent**. The Image Scorer
 (a skill ai runs) answers three things: which photos to use, which are **money
 shots** (the frames that sell the property), and **what order to move through
 them**. You are not picking "good photos" — you are letting the scorer draft the
