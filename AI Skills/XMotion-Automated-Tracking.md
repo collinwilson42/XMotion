@@ -69,25 +69,25 @@ Read `config.s_next_index` → assign `s_rotation[index]` → advance index (mod
 
 ## 4. Read map — which view answers which question
 
-| Question | View | Dashboard |
-|---|---|---|
-| Which pacing (S) sells? | `v_s_performance` | Images x Seconds |
-| Which duration bucket sells? | `v_duration_performance` | Images x Seconds |
-| Which N×S cell sells? | `v_grid_cell` | Images x Seconds (heatmap) |
-| How is each VA performing (ops + commission)? | `v_va_scorecard` | **Shot Quality Scoring** |
-| Which VA produces the best output? (avg Ⲱ, avg Ѡ) | `v_va_shot_scoring` | **Shot Quality Scoring** |
-| Which model earns its credits? (WBS 4.3) | `v_model_scoring` | **Shot Quality Scoring** |
-| Per-shot score ledger (listing layer) | `v_shot_scoring` | Shot Quality Scoring (recent 25) |
-| Who produces efficient shots, per tier? (⚡ ablation) | `v_shot_efficiency` | **Shot Quality Scoring** |
-| What awaits Collin's final ֎ review? | `v_shot_efficiency` (review queue) | **Shot Quality Scoring** |
-| Does the SD gate predict conversion? | `v_quality_vs_outcome` | **Shot Quality Scoring** |
-| Capacity + abandonment guardrails | `v_monthly_ops` | **Shot Quality Scoring** |
-| How much budget remains, per producer? | `v_budget_status` | **Production & Distribution** |
-| Which preview tier gets responses? (A/B) | `v_tier_ab` | **Production & Distribution** |
-| Which market converts? | `v_location_performance` | Locations |
-| Which frame/content/border combo sells? | `v_format_combo` | Format & Overlay |
-| Which overlay placement sells? | `v_overlay_performance` | Format & Overlay |
-| Which X-Factors show up in wins? | `v_x_factor_performance` | X-Factor Relativity |
+| Question                                             | View                               | Dashboard                        |
+| ---------------------------------------------------- | ---------------------------------- | -------------------------------- |
+| Which pacing (S) sells?                              | `v_s_performance`                  | Images x Seconds                 |
+| Which duration bucket sells?                         | `v_duration_performance`           | Images x Seconds                 |
+| Which N×S cell sells?                                | `v_grid_cell`                      | Images x Seconds (heatmap)       |
+| How is each VA performing (ops + commission)?        | `v_va_scorecard`                   | **Shot Quality Scoring**         |
+| Which VA produces the best output? (avg Ⲱ, avg Ѡ)    | `v_va_shot_scoring`                | **Shot Quality Scoring**         |
+| Which model earns its credits? (WBS 4.3)             | `v_model_scoring`                  | **Shot Quality Scoring**         |
+| Per-shot score ledger (listing layer)                | `v_shot_scoring`                   | Shot Quality Scoring (recent 25) |
+| Who produces efficient shots, per tier? (⚡ ablation) | `v_shot_efficiency`                | **Shot Quality Scoring**         |
+| What awaits Collin's final ֎ review?                 | `v_shot_efficiency` (review queue) | **Shot Quality Scoring**         |
+| Does the pre-gate predict conversion?                | `v_quality_vs_outcome`             | **Shot Quality Scoring**         |
+| Capacity + abandonment guardrails                    | `v_monthly_ops`                    | **Shot Quality Scoring**         |
+| How much budget remains, per producer?               | `v_budget_status`                  | **Production & Distribution**    |
+| Which preview tier gets responses? (A/B)             | `v_tier_ab`                        | **Production & Distribution**    |
+| Which market converts?                               | `v_location_performance`           | Locations                        |
+| Which frame/content/border combo sells?              | `v_format_combo`                   | Format & Overlay                 |
+| Which overlay placement sells?                       | `v_overlay_performance`            | Format & Overlay                 |
+| Which X-Factors show up in wins?                     | `v_x_factor_performance`           | X-Factor Relativity              |
 
 > **One metric, one home:** `Shot Quality Scoring` is the single scoring master —
 > the full ladder (SD gate → ⲱ/Ⲱ/Ѡ → ֎/✔️/🔗/⚡). `Production & Distribution` is

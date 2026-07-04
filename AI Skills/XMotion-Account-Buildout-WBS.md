@@ -141,7 +141,7 @@ Define session-open behavior (check latest handoff, greet, load register) and se
 The tracking engine currently lives in *both* `XMotion-Shot-Protocol.md` and `Optimal Budgeting & Tracking — XMotion v1.0.md`. To free Shot-Protocol.md to become the Operating Protocol skill, migrate the tracking/workflow engine to a single owner (recommend the Budgeting doc, or a renamed `XMotion-Operations-Tracking.md`) and have Shot-Protocol point to it. One rule, one home.
 
 **4.2 — Define the five-skill stack and load order.**
-Target library: (1) **Operating Protocol** (identity/role — loads first, always), (2) **Shot Quality Equation** (the gate), (3) **Higgsfield Walkthrough** (the craft), (4) **Operations & Tracking** (the log engine). Document which skills a VA pulls (`/XM` → Quality + Walkthrough) versus which are always-on for X (Protocol + Tracking). ()
+Target library: (1) **Operating Protocol** (identity/role — loads first, always), (2) **Shot Quality Equation** (the gate), (3) **Higgsfield Walkthrough** (the craft), (4) **Operations & Tracking** (the log engine). Document which skills a VA pulls (`/XM` → Quality + Walkthrough) versus which are always-on for X (Protocol + Tracking). (5) **Vision Model Image Analysis**
 
 **4.3 — Close the Shot Quality Equation open items.**
 The equation is v0.5-DRAFT with EST gate thresholds pending a model ranking (MV). Fold MV assignment into the first real production session (Segment 10) and then lock the EST bands. Until then, the SD listing gate (Pass/Maybe/Fail) governs and is already usable.
