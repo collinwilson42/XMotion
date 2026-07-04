@@ -25,23 +25,23 @@
 
 ## 3. VA Scoring Averages (ⲱ / Ⲱ / Ѡ)
 
-> *No data yet - this dashboard populates as WIZX records listings.*
+> *No data yet - this dashboard populates as X records listings.*
 
 ## 4. Model Ranking (feeds MV assignment, WBS 4.3)
 
-> *No data yet - this dashboard populates as WIZX records listings.*
+> *No data yet - this dashboard populates as X records listings.*
 
 ## 5. Recent Scored Shots (listing layer)
 
-> *No data yet - this dashboard populates as WIZX records listings.*
+> *No data yet - this dashboard populates as X records listings.*
 
 ## 6. Efficiency by Producer × Tier (⚡ ablation — within-tier only)
 
-> *No data yet - this dashboard populates as WIZX records listings.*
+> *No data yet - this dashboard populates as X records listings.*
 
 ## 7. Review Queue (֎🇦🇮 = awaiting Collin's final ֎)
 
-> *No data yet - this dashboard populates as WIZX records listings.*
+> *No data yet - this dashboard populates as X records listings.*
 
 ## 8. Monthly Ops (capacity + abandonment guardrails)
 
