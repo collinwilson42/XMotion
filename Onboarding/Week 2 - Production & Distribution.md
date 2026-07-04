@@ -42,14 +42,18 @@ Credits are the unit of trust. Producers hold budgets, not shot counts.
 
 | Producer | Share | July Credits |
 |---|---|---|
-| Collin | 60% | 688.5 |
-| Jaisa | 15% | 172.0 |
-| Richlan | 15% | 172.0 |
-| House reserve | ~10% | 115 (unallocated — regens gone wrong, experiments, WIZX-flagged saves) |
+| Collin | 40% | 459.0 |
+| Jaisa | 20% | 229.5 |
+| Richlan | 20% | 229.5 |
+| House reserve | 20% | 229.5 (unallocated — regens gone wrong, experiments, WIZX-flagged saves) |
 
 Budgets live in `budget_allocations`; spend accrues from `shots.credits_used`;
 the Production & Distribution Dashboard shows remaining in real time. A regen
 comes out of *your* budget — that's the incentive to gate hard before firing.
+
+**Non-negotiable condition on VA budgets:** every VA credit is spent on a live
+call with Collin — see §3. The budget is generous *because* the guidance is
+mandatory.
 
 **Growth ladder:** first sale this month → account upgrades to Ultra (3,200
 credits/mo) → VA allocations rise to **25% each**, then grow as ⚡ numbers prove
@@ -57,13 +61,20 @@ out. Your budget is earned by your efficiency score, not by tenure.
 
 ## 3. Group Session Protocol (VA production)
 
-All VA generation happens in **live group sessions with Collin** — no solo
-firing in month one. Purpose: coaching in the moment, and no mistake gets made
-twice (check the Findings Log *before* every session, add to it after).
+All VA generation happens in **live group sessions** — no solo firing in month
+one. The preferred format: **all three on one call** (Collin + Jaisa + Richlan),
+the producer taking the shot **screen-shares**, and everyone works the **same
+image archive** (the CS contact sheets for the listing in play) to argue out the
+money shots together before a credit moves. Money-shot identification is a
+taught skill — the argument IS the training. Purpose: coaching in the moment,
+and no mistake gets made twice (check the Findings Log *before* every session,
+add to it after).
 
 Session flow, every time:
 1. **Gate** — listing passes SD before any credits move (Week 1 skill).
-2. **Frame plan** — WIZX scouts CS sheets, pairs are nominated, verified full-res.
+2. **Frame plan** — the group scouts the same CS sheets on the call; WIZX + all
+   three nominate money shots and frame pairs; pairs verified full-res by the
+   producer sharing screen.
 3. **Preflight** — get_cost before fire; confirm budget headroom on the dashboard.
 4. **Fire** — VA drives, Collin coaches, WIZX logs job IDs live.
 5. **Review** — keep/regen calls as a group; failure modes named out loud and logged.

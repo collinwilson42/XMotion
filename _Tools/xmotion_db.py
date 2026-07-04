@@ -289,10 +289,10 @@ def main():
     cur.execute("INSERT OR IGNORE INTO vas (name, start_date, commission_rate, status, skill_notes) "
                 "VALUES ('Collin', date('now'), 0.0, 'founder', 'Founder - production attribution row')")
 
-    # Week 2 seed: July 2026 credit budgets (balance 1147.5 at allocation:
-    # Collin 60% / Jaisa 15% / Richlan 15%; ~10% house reserve stays unallocated)
-    for name, credits in (("Collin", 688.5), ("Jaisa", 172.0), ("Richlan", 172.0)):
-        cur.execute("INSERT OR IGNORE INTO budget_allocations (month, va_id, credits_allocated) "
+    # Week 2 budgets — July 2026 (rev 2, Collin): 40% Collin / 20% Jaisa / 20% Richlan
+    # / 20% house reserve, on 1147.5 at allocation. Upsert so re-runs apply revisions.
+    for name, credits in (("Collin", 459.0), ("Jaisa", 229.5), ("Richlan", 229.5)):
+        cur.execute("INSERT OR REPLACE INTO budget_allocations (month, va_id, credits_allocated) "
                     "SELECT '2026-07', va_id, ? FROM vas WHERE name=?", (credits, name))
 
     cur.execute("INSERT OR IGNORE INTO overlay_templates (name, placement, loop_version) VALUES "
