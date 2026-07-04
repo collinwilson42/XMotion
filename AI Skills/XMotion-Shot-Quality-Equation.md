@@ -31,7 +31,7 @@ growth:
 ## The Canonical Equation (Image Scorer v2 — one form, every level)
 
 ```
-Score = √( Flow × Quality × Location × MoneyShot )  /  √( Ambiguity × Noise )
+Per Image Score = √( Flow × Quality × Location × MoneyShot )  /  √( Ambiguity × Noise )
 ```
 
 All six factors are **1–99 integers**. Applied per image by the Image Scorer
@@ -39,7 +39,7 @@ All six factors are **1–99 integers**. Applied per image by the Image Scorer
 live there). Averaged over a block, the same form yields the **Catalog score**:
 
 ```
-Catalog = √( avgFlow × avgQual × avgLoc × avgMS ) / √( avgAmb × avgNoise )
+ⲱ = √( avgFlow × avgQual × avgLoc × avgMS ) / √( avgAmb × avgNoise )
 ```
 
 The **denominator alone** is the pre-spend gate; the **full ratio** is the
@@ -95,12 +95,12 @@ anchors are spaced to keep discrimination at the dangerous end.
 
 ## The Glyph Ladder — Before / After / Balanced
 
-| Glyph | Codepoint  | Name                | Formula                                                         | Phase                                                 |
-| :---: | ---------- | ------------------- | --------------------------------------------------------------- | ----------------------------------------------------- |
-|   ⲱ   | U+2CB1     | **Shot Potential**  |                                                                 | *Before* — what the keeper set puts on the table      |
-|   Ⲱ   | U+2CB0     | **Shot Yield**      | Output Video Quality, 1–100, judged on the rendered walkthrough | *After* — what the render delivered                   |
-|   Ѡ   | U+0460     | **Shot Resonance**  | Ⲱ × ⲱ (range 1–10,000)                                          | *Balanced* — high only when a strong setup also lands |
-| **⊜** | **U+229C** | **Set Degradation** | **√(Avg_Ambiguity × Avg_Noise), 1–99**                          | **Pre-Shot Gate**                                     |
+| Glyph | Codepoint  | Name                | Formula                                                          | Phase                                                 |
+| :---: | ---------- | ------------------- | ---------------------------------------------------------------- | ----------------------------------------------------- |
+|   ⲱ   | U+2CB1     | **Shot Potential**  | √( avgFlow × avgQual × avgLoc × avgMS ) / √( avgAmb × avgNoise ) | *Before* — what the keeper set puts on the table      |
+|   Ⲱ   | U+2CB0     | **Shot Yield**      | √(֎ × ✔️) / 🔗                                                   | *After* — what the render delivered                   |
+|   Ѡ   | U+0460     | **Shot Resonance**  | Ⲱ × ⲱ (range 1–10,000)                                           | *Balanced* — high only when a strong setup also lands |
+| **⊜** | **U+229C** | **Set Degradation** | **√(Avg_Ambiguity × Avg_Noise), 1–99**                           | **Pre-Shot Gate**                                     |
 
 **ⲱ is now derived from the canonical equation** — the Catalog score of the
 keeper set, normalized to 1–99 (÷10, cap 99; a strong clean block lands in the
