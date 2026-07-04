@@ -95,23 +95,13 @@ anchors are spaced to keep discrimination at the dangerous end.
 
 ## The Glyph Ladder — Before / After / Balanced
 
-| Glyph | Codepoint  | Name                | Formula                                                          | Phase                                            |
-| :---: | ---------- | ------------------- | ---------------------------------------------------------------- | ------------------------------------------------ |
-|   ⲱ   | U+2CB1     | **Shot Potential**  | √( avgFlow × avgQual × avgLoc × avgMS ) / √( avgAmb × avgNoise ) | *Before* — what the keeper set puts on the table |
-| **Ⲱ** | U+2CB0     | **Shot Yield**      | √(֎🇦🇮 × ✔️) / 🔗                                               | *After* — what the render delivered              |
-|   Ѡ   | U+0460     | **Shot Resonance**  | Ⲱ × ⲱ ,<br>Ⲱ : ⲱ                                                 | *Balanced* — when a strong setup also lands      |
-| **⊜** | **U+229C** | **Set Degradation** | **√(Avg_Ambiguity × Avg_Noise), 1–99**                           | **Pre-Shot Gate**                                |
+| Glyph | Codepoint | Name                | Formula                                                          | Phase                                            |
+| :---: | --------- | ------------------- | ---------------------------------------------------------------- | ------------------------------------------------ |
+|   ⊜   | U+229C    | **Set Degradation** | √(Avg_Ambiguity × Avg_Noise), 1–99                               | **Pre-Shot Gate**                                |
+|   ⲱ   | U+2CB1    | **Shot Potential**  | √( avgFlow × avgQual × avgLoc × avgMS ) / √( avgAmb × avgNoise ) | *Before* — what the keeper set puts on the table |
+|   Ⲱ   | U+2CB0    | **Shot Yield**      | √(֎🇦🇮 × ✔️) / 🔗                                               | *After* — what the render delivered              |
+|   Ѡ   | U+0460    | **Shot Resonance**  | Ⲱ × ⲱ / 2                                                        | *Balanced* — when a strong setup also lands      |
 
-**ⲱ is now derived from the canonical equation** — the Catalog score of the
-keeper set, normalized to 1–99 (÷10, cap 99; a strong clean block lands in the
-80s, a mediocre one in the 20s — draft normalization, calibrate as data lands).
-The old ⲱ = √(Model-Quality %ile × Shot-Quantity %ile) is retired with MV; the
-`model_quality_pctile` / `shot_quantity_pctile` columns remain in the DB as
-legacy (never populated on real data).
-
-**Model ranking (WBS 4.3) is now purely empirical:** models are ranked on
-realized Ѡ in `v_model_scoring` — no assigned MV, no pending thresholds. The
-D-3 open decision closes with this retirement.
 
 **Post Shot Layer** — per produced *preview shot* (the `shots` table),
 downstream of the listing layer above: ֎🇦🇮 AI quality (1–99 percentile,
@@ -123,7 +113,7 @@ post-edit, pending review) → ֎ Collin-final (1–99) · ✔️ response inter
 
 **Post-shot scoring reflex:** the moment keepers are scored, write the ⊜
 factors and `shot_potential` (ⲱ); the moment the rendered video is reviewed,
-write `output_quality` (Ⲱ) and `shot_resonance` (Ѡ = Ⲱ · ⲱ), then run the
+write `output_quality` (Ⲱ) and `shot_resonance` (Ѡ = Ⲱ · ⲱ / 2), then run the
 materializer. Dashboard: `Analysis\Shot Quality Scoring` (the merged scoring
 master). Full trigger map: `AI Skills\XMotion-Automated-Tracking.md`.
 
