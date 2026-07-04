@@ -65,12 +65,39 @@ CREATE TABLE IF NOT EXISTS overlay_templates (
   loop_version TEXT,         -- which animated loop build
   created_at TEXT DEFAULT (datetime('now')));
 
+-- Week 2: per-shot production & distribution layer (2026-07-03, Collin directive)
+CREATE TABLE IF NOT EXISTS shots (
+  shot_id INTEGER PRIMARY KEY,
+  listing_id INTEGER REFERENCES listings(listing_id),
+  va_id INTEGER NOT NULL REFERENCES vas(va_id),
+  date_produced TEXT NOT NULL,
+  tier TEXT NOT NULL,            -- Tier-1A | Tier-1B | Tier-2A | Tier-2B | Tier-3A
+  job_ids TEXT,                  -- comma-joined Higgsfield job UUIDs incl. regens
+  credits_used REAL,             -- LINK glyph: total credits to viable shot (incl. regens)
+  quality_ai INTEGER,            -- AI percentile 1-99, post-edit, PENDING review
+  quality_final INTEGER,         -- Collin-adjusted 1-99; NULL until reviewed
+  response_score INTEGER,        -- CHECK glyph: 1-99 (1 = no response)
+  sent_date TEXT,
+  status TEXT DEFAULT 'draft',   -- draft | viable | sent | responded | closed
+  file_path TEXT,                -- materialized filename in Analytics\Shots
+  notes TEXT,
+  created_at TEXT DEFAULT (datetime('now')));
+
+CREATE TABLE IF NOT EXISTS budget_allocations (
+  month TEXT NOT NULL,           -- 'YYYY-MM'
+  va_id INTEGER NOT NULL REFERENCES vas(va_id),
+  credits_allocated REAL NOT NULL,
+  PRIMARY KEY (month, va_id));
+
 CREATE INDEX IF NOT EXISTS ix_listings_va   ON listings(va_id);
 CREATE INDEX IF NOT EXISTS ix_listings_loc  ON listings(location_id);
 CREATE INDEX IF NOT EXISTS ix_listings_s    ON listings(s_per_image);
 CREATE INDEX IF NOT EXISTS ix_listings_date ON listings(date_started);
 CREATE INDEX IF NOT EXISTS ix_offers_listing ON offers(listing_id);
 CREATE INDEX IF NOT EXISTS ix_lxf_xf ON listing_x_factors(x_factor_id);
+CREATE INDEX IF NOT EXISTS ix_shots_va   ON shots(va_id);
+CREATE INDEX IF NOT EXISTS ix_shots_tier ON shots(tier);
+CREATE INDEX IF NOT EXISTS ix_shots_date ON shots(date_produced);
 """
 
 # Idempotent column adds (SQLite has no ADD COLUMN IF NOT EXISTS).
@@ -95,6 +122,8 @@ MIGRATIONS = [
     # -- prompt tracking (2026-07-03, Collin directive): confirmed template per shot --
     ("listings", "shot1_prompt",          "TEXT"),     # confirmed prompt template, shot 1
     ("listings", "shot2_prompt",          "TEXT"),     # confirmed prompt template, shot 2
+    # -- Week 2 (2026-07-03): filename initials for shot file materialization --
+    ("vas", "initials",                   "TEXT"),     # e.g. 'CH' — used in shot filenames
 ]
 
 def migrate(cur):
@@ -198,6 +227,29 @@ FROM overlay_templates t
 LEFT JOIN listings l ON l.overlay_template_id=t.template_id
 LEFT JOIN offers o ON o.listing_id=l.listing_id
 GROUP BY t.template_id, t.name""",
+"v_shot_efficiency": """
+SELECT s.shot_id, s.date_produced, v.name AS va, COALESCE(v.initials, upper(substr(v.name,1,2))) AS initials,
+  s.tier, s.credits_used, s.response_score,
+  COALESCE(s.quality_final, s.quality_ai) AS quality_eff,
+  CASE WHEN s.quality_final IS NOT NULL THEN 'final' ELSE 'ai-pending' END AS review_state,
+  s.quality_ai, s.quality_final, s.status, s.sent_date, s.listing_id, s.file_path, s.notes
+FROM shots s JOIN vas v ON v.va_id=s.va_id""",
+"v_budget_status": """
+SELECT b.month, v.name AS va, b.credits_allocated,
+  ROUND(COALESCE(SUM(s.credits_used),0),2) AS credits_spent,
+  ROUND(b.credits_allocated - COALESCE(SUM(s.credits_used),0),2) AS credits_remaining
+FROM budget_allocations b JOIN vas v ON v.va_id=b.va_id
+LEFT JOIN shots s ON s.va_id=b.va_id AND substr(s.date_produced,1,7)=b.month
+GROUP BY b.month, b.va_id""",
+"v_tier_ab": """
+SELECT tier, COUNT(*) AS shots,
+  SUM(status IN ('sent','responded','closed')) AS sent,
+  SUM(response_score > 1) AS responses,
+  ROUND(1.0*SUM(response_score>1)/NULLIF(SUM(status IN ('sent','responded','closed')),0),3) AS response_rate,
+  ROUND(AVG(response_score),1) AS avg_response,
+  ROUND(AVG(COALESCE(quality_final, quality_ai)),1) AS avg_quality,
+  ROUND(SUM(credits_used),1) AS credits
+FROM shots GROUP BY tier""",
 "v_x_factor_performance": """
 SELECT xf.x_factor_id, xf.name, xf.category,
   COUNT(DISTINCT lx.listing_id) AS listings,
@@ -215,6 +267,7 @@ GRID = [(n, s) for n in (5, 8, 10, 12, 15, 18, 20, 25) for s in (2.0, 2.5, 3.0, 
 CONFIG = [
     ("s_rotation", "2.0,2.5,3.0,4.0"), ("s_next_index", "0"), ("s_locked", ""),
     ("lock_threshold_offers", "20"), ("rollup_every_offers", "10"),
+    ("filename_glyphs", "on"),   # 'on' = Collin glyph filenames; 'off' = ASCII-safe (QA/QF/V/C/E)
 ]
 
 def main():
@@ -233,6 +286,14 @@ def main():
         cur.execute("INSERT OR IGNORE INTO config VALUES (?,?,datetime('now'))", (k, v))
     for va in ("Jaisa", "Richlan"):
         cur.execute("INSERT OR IGNORE INTO vas (name, start_date) VALUES (?, date('now'))", (va,))
+    cur.execute("INSERT OR IGNORE INTO vas (name, start_date, commission_rate, status, skill_notes) "
+                "VALUES ('Collin', date('now'), 0.0, 'founder', 'Founder - production attribution row')")
+
+    # Week 2 seed: July 2026 credit budgets (balance 1147.5 at allocation:
+    # Collin 60% / Jaisa 15% / Richlan 15%; ~10% house reserve stays unallocated)
+    for name, credits in (("Collin", 688.5), ("Jaisa", 172.0), ("Richlan", 172.0)):
+        cur.execute("INSERT OR IGNORE INTO budget_allocations (month, va_id, credits_allocated) "
+                    "SELECT '2026-07', va_id, ? FROM vas WHERE name=?", (credits, name))
 
     cur.execute("INSERT OR IGNORE INTO overlay_templates (name, placement, loop_version) VALUES "
                 "('A-1','center-bottom-right','loop-v1'),('A-2','top-right','loop-v1')")

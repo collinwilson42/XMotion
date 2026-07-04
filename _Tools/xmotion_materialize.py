@@ -8,11 +8,12 @@ Run:  py xmotion_materialize.py           -> real DB -> 6 dashboards
 
 X runs this after any write trigger (see trigger table) so dashboards stay live.
 """
-import sqlite3, sys
+import sqlite3, sys, math, os, re
 from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(r"C:\dev\XMotion\Analysis")
+SHOTS_DIR = Path(r"C:\dev\XMotion\Analytics\Shots")
 DEMO = "--demo" in sys.argv
 DB = ROOT / ("XMotion_demo.db" if DEMO else "XMotion.db")
 SUFFIX = " (Demo Preview)" if DEMO else ""
@@ -46,6 +47,64 @@ def bar(value, lo, hi, invert=False, width=12, fmt="{}"):
     n = max(1, round(t * width))
     color = grade(value, lo, hi, invert)
     return f"<span style='color:{color}'>{'&#9608;' * n}</span> **{fmt.format(value)}**"
+
+def efficiency(quality_eff, response, credits):
+    """LIGHTNING = sqrt(Q_eff x CHECK) / LINK. Computed in Python (portable sqrt)."""
+    if not quality_eff or not response or not credits:
+        return None
+    return round(math.sqrt(quality_eff * response) / credits, 2)
+
+
+def shot_filename(date, initials, tier, q_ai, q_final, response, credits, eff, glyphs=True):
+    """Canonical shot filename, materialized from DB truth.
+    Glyph mode:  {date}-{ini}-{tier}-֎🇦🇮{q} | ֎{q}-✔️{r}-🔗{c}-⚡{e}.mp4
+    ASCII mode:  {date}-{ini}-{tier}-QA{q} | QF{q}-V{r}-C{c}-E{e}.mp4
+    Missing values render as 'na'."""
+    def fv(x):
+        return "na" if x is None else (f"{x:g}" if isinstance(x, float) else str(x))
+    if q_final is not None:
+        qtok = ("\u058e" if glyphs else "QF") + fv(q_final)
+    else:
+        qtok = (("\u058e\U0001F1E6\U0001F1EE" if glyphs else "QA")) + fv(q_ai)
+    if glyphs:
+        return f"{date}-{initials}-{tier}-{qtok}-\u2714\uFE0F{fv(response)}-\U0001F517{fv(credits)}-\u26A1{fv(eff)}.mp4"
+    return f"{date}-{initials}-{tier}-{qtok}-V{fv(response)}-C{fv(credits)}-E{fv(eff)}.mp4"
+
+
+def sync_shot_filenames(cur):
+    """Rename mp4s in Analytics\\Shots to match DB truth; update shots.file_path.
+    Runs on every materialization — filenames are a projection, the DB is the source."""
+    glyphs = True
+    row = cur.execute("SELECT value FROM config WHERE key='filename_glyphs'").fetchone()
+    if row and str(row[0]).lower() in ("off", "0", "false", "ascii"):
+        glyphs = False
+    SHOTS_DIR.mkdir(parents=True, exist_ok=True)
+    rows = cur.execute(
+        "SELECT shot_id, date_produced, initials, tier, quality_ai, quality_final,"
+        " response_score, credits_used, file_path FROM v_shot_efficiency"
+        " WHERE file_path IS NOT NULL").fetchall()
+    renamed = 0
+    for sid, date, ini, tier, q_ai, q_final, resp, cred, fpath in rows:
+        eff = efficiency(q_final if q_final is not None else q_ai, resp, cred)
+        target = shot_filename(date, ini or "XX", tier, q_ai, q_final, resp, cred, eff, glyphs)
+        cur_path = Path(fpath)
+        if not cur_path.is_absolute():
+            cur_path = SHOTS_DIR / cur_path
+        new_path = cur_path.parent / target
+        if cur_path.name == target:
+            continue
+        try:
+            if cur_path.exists():
+                os.rename(cur_path, new_path)
+            cur.execute("UPDATE shots SET file_path=? WHERE shot_id=?",
+                        (str(new_path), sid))
+            renamed += 1
+            print(f"renamed shot #{sid} -> {target}")
+        except OSError as e:
+            print(f"[warn] shot #{sid} rename failed: {e}")
+    if renamed:
+        print(f"filename sync: {renamed} file(s) rematerialized")
+
 
 def q(cur, sql):
     cur.execute(sql)
@@ -229,6 +288,63 @@ def main():
     body += table(["Template", "Placement", "Loop", "Listings", "Offers", "Accepted",
                    "Conversion"], styled)
     write("Format & Overlay", "Format & Overlay Dashboard", body)
+
+    # ---- Production & Distribution (Week 2 layer) ----
+    body = header("Production & Distribution Dashboard",
+                  "\u26A1 efficiency green at 4+. \u2714\uFE0F response green at 60+. "
+                  "Budget remaining inverted: low = red.")
+    body += ("> **Key:** \U0001F517 credits-to-viable (incl. regens) \u00b7 \u2714\uFE0F response 1-99 "
+             "(1 = none) \u00b7 \u058e\U0001F1E6\U0001F1EE AI score pending review \u00b7 \u058e final "
+             "Collin-adjusted \u00b7 \u26A1 = \u221a(\u058e \u00d7 \u2714\uFE0F) / \U0001F517 "
+             "(uses final when present, else AI)\n\n## Budget Status (month \u00d7 producer)\n\n")
+    cols, rows = q(cur, "SELECT month, va, credits_allocated, credits_spent, credits_remaining"
+                        " FROM v_budget_status ORDER BY month, credits_allocated DESC")
+    styled = [[r[0], r[1], f"{r[2]:g}", f"{r[3]:g}",
+               bar(r[4], 0, r[2] or 1, fmt="{:.1f}") if r[4] is not None else None] for r in rows]
+    body += table(["Month", "Producer", "Allocated", "Spent", "Remaining"], styled)
+    body += "\n## Tier A/B Results (outreach experiment)\n\n"
+    cols, rows = q(cur, "SELECT tier, shots, sent, responses, response_rate, avg_response,"
+                        " avg_quality, credits FROM v_tier_ab ORDER BY tier")
+    styled = [[r[0], r[1], r[2], r[3],
+               bar(r[4], 0.0, 0.50, fmt="{:.1%}") if r[4] is not None else None,
+               chip(r[5], 1, 99) if r[5] is not None else None,
+               chip(r[6], 1, 99) if r[6] is not None else None,
+               r[7]] for r in rows]
+    body += table(["Tier", "Shots", "Sent", "Responses", "Response Rate",
+                   "Avg \u2714\uFE0F", "Avg \u058e", "Credits"], styled)
+    body += "\n## Efficiency by Producer \u00d7 Tier (\u26A1 ablation)\n\n"
+    cols, rows = q(cur, "SELECT va, tier, credits_used, response_score, quality_eff,"
+                        " review_state, date_produced, status FROM v_shot_efficiency"
+                        " ORDER BY va, tier, date_produced")
+    agg = {}
+    for va, tier, cred, resp, qual, state, date, status in rows:
+        e = efficiency(qual, resp, cred)
+        if e is not None:
+            agg.setdefault((va, tier), []).append(e)
+    styled = [[va, tier, len(effs),
+               bar(round(sum(effs)/len(effs), 2), 0, 6, fmt="{:.2f}"),
+               f"{max(effs):.2f}"]
+              for (va, tier), effs in sorted(agg.items())]
+    body += table(["Producer", "Tier", "Scored Shots", "Avg \u26A1", "Best \u26A1"], styled)
+    body += "\n## Recent Shots (review queue: \u058e\U0001F1E6\U0001F1EE = awaiting Collin)\n\n"
+    cols, rows = q(cur, "SELECT date_produced, va, tier, quality_ai, quality_final,"
+                        " response_score, credits_used, review_state, status"
+                        " FROM v_shot_efficiency ORDER BY date_produced DESC LIMIT 30")
+    styled = [[r[0], r[1], r[2],
+               chip(r[3], 1, 99) if r[3] is not None else None,
+               chip(r[4], 1, 99) if r[4] is not None else None,
+               chip(r[5], 1, 99) if r[5] is not None else None,
+               r[6],
+               ("\u058e final" if r[7] == "final" else "\u058e\U0001F1E6\U0001F1EE pending"),
+               r[8]] for r in rows]
+    body += table(["Date", "Producer", "Tier", "\u058e\U0001F1E6\U0001F1EE AI", "\u058e Final",
+                   "\u2714\uFE0F", "\U0001F517", "Review", "Status"], styled)
+    write("Production & Distribution", "Production & Distribution Dashboard", body)
+
+    # ---- Filename materialization (DB -> Analytics\Shots mp4 names) ----
+    if not DEMO:
+        sync_shot_filenames(cur)
+        con.commit()
 
     con.close()
 
