@@ -4,14 +4,14 @@ description: >
   Given a 3x3 grid of property thumbnails, score each image on walkthrough
   potential using the XMotion Shot Quality Equation (v2). Returns per-image
   scores, a Money Shot rating, bridge sequences (the shot list), catalog grade,
-  and confidence. Use when a VA sends a capture block to be scored and sequenced.
+  and confidence. Use on a capture block that needs scoring and sequencing.
 tools: filesystem
 type: ai-skill
 domain: image-scoring
 status: live
 version: 2.2
 updated: 2026-07-05
-audience: XMotion VAs, X, and vision models (Gemini / GPT-4o / Kimi)
+audience: XMotion operator (Collin) + any wiz account, and vision models (Gemini / GPT-4o / Kimi)
 maintainer: XMotion
 signed: Collin (Chief) + wiz-4
 growth:
@@ -30,7 +30,7 @@ photos; you are drafting the shot list.
 
 ## Input
 A **3x3 grid of thumbnails**, cells numbered 001, 002, ... left-to-right,
-top-to-bottom. If there are more than 9 images, the VA sends multiple grids —
+top-to-bottom. If there are more than 9 images, send multiple grids —
 process every image across all grids as one block.
 
 ## Scoring Equation (per image)
@@ -109,7 +109,7 @@ Rules:
 ## Keep rule (percentile, robust to scale)
 - Compute Score for all frames.
 - **Keep** frames at or above the **40th percentile** of the block (default;
-  VA may override), targeting **8–15 keepers** for a coherent walkthrough.
+  operator may override), targeting **8–15 keepers** for a coherent walkthrough.
 - **Auto-drop** any technical fail regardless of Score: too dark, blurry,
   fisheye-warped, or watermarked.
 - Only keepers are eligible for bridges. (With the sqrt form an absolute cutoff
@@ -152,7 +152,7 @@ was actually visible.
 - Use only what is visible in the thumbnails. Do not infer unseen rooms.
 - Dark/blurry/watermarked → penalize Quality hard, raise Noise, auto-drop.
 - No location chart → Location = 50.
-- VA instructions (e.g. "prioritize outdoor spaces", "threshold to 50th pct")
+- Operator instructions (e.g. "prioritize outdoor spaces", "threshold to 50th pct")
   override these defaults.
 - Bridges are the deliverable. A perfect keep-list with no bridges is an
   incomplete job — always group the keepers into the camera path.
