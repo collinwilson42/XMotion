@@ -87,7 +87,7 @@ What each one is:
 - **Obsidian** — where you'll read guides like this one and log your work. [obsidian.md/download](https://obsidian.md/download)
 - **Alacritty** — a terminal window (we'll customize it in a fun way in Part 5). [alacritty.org](https://alacritty.org)
 - **Node.js** — runs behind the scenes so Claude's tools work. (No window opens — that's normal.)
-- **Python** — runs the photo capture tool. (Also no window — normal.)
+- **Python** —  (Also no window — normal.)
 - **Git** — will use later for refreshing the obsidian vault or an automatic sync
 - **Power Toys** — set Fancy Zones to priority for efficiency (hold shift while moving a window to lock it to a zone)
 - **Outlook (new)** — free Microsoft Store client for the shared team inbox used for customer outreach
