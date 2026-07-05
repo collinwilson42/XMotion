@@ -1,6 +1,6 @@
 # Locations Dashboard
 
-> Materialized from `XMotion.db` at 2026-07-05 16:16 by xmotion_materialize.py. Do not hand-edit - regenerate instead.
+> Materialized from `XMotion.db` at 2026-07-05 16:24 by xmotion_materialize.py. Do not hand-edit - regenerate instead.
 >
 > Gradient: conversion green at 30%+, red at 0. SD inverted: low SD = green.
 

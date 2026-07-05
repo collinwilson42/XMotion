@@ -1,6 +1,6 @@
 # X-Factor Relativity Dashboard
 
-> Materialized from `XMotion.db` at 2026-07-05 16:16 by xmotion_materialize.py. Do not hand-edit - regenerate instead.
+> Materialized from `XMotion.db` at 2026-07-05 16:24 by xmotion_materialize.py. Do not hand-edit - regenerate instead.
 >
 > Gradient: conversion green at 30%+. An X-Factor earns green by showing up in accepted offers.
 
