@@ -9,8 +9,8 @@ tools: filesystem
 type: ai-skill
 domain: image-scoring
 status: live
-version: 2.1
-updated: 2026-07-04
+version: 2.2
+updated: 2026-07-05
 audience: XMotion VAs, X, and vision models (Gemini / GPT-4o / Kimi)
 maintainer: XMotion
 signed: Collin (Chief) + wiz-4
@@ -68,6 +68,13 @@ the final Score to the nearest integer.
    unique feature. **Deliberately separate from Quality** — a technically perfect
    photo of a bathroom is high Quality, low MoneyShot. 99 = this is the frame
    that sells the property.
+   **v2.2 — PERCENTILE RULE (Collin directive, 2026-07-05):** MoneyShot is scored
+   as a **forced percentile across ALL images in the analyzed block** (all grids
+   combined). Report a `Money %ile` column on a 0–100 scale where **exactly one
+   image = 100 and exactly one image = 0, always** — the full spread is
+   mandatory, no clustering. For the Score equation, map the percentile to the
+   1–99 factor range (100→99, 0→1) so a non-hero frame never multiplies the
+   whole Score to zero.
 
 ### Denominator factors (uncertainty)
 5. **Ambiguity (1–99)** — how unsure you are of the frame's usefulness. Low =
@@ -76,6 +83,13 @@ the final Score to the nearest integer.
    points, watermarks, overlaid text. Low = clean, focused composition.
 
 ## Bridges (the shot list — this is the point)
+
+**v2.2 — #1 PRIORITY (Collin directive, 2026-07-05): the bridge field on
+high-percentile money shots is the single most important output of this skill.**
+A bridge that carries the block's top Money %ile frames IS the preview clip that
+sells the property — rank the Bridge Sequence Map by the money weight of each
+bridge (sum/max of member Money %iles), highest first. A perfect keep-list
+without money-ranked bridges is an incomplete job.
 
 A **bridge** is a recommended micro-sequence of **2–4 keeper frames (including
 the anchor)** that form one smooth camera path — e.g. `035 ➢ 054 ➢ 055`. Each
