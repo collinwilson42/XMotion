@@ -138,13 +138,13 @@ numbers prove themselves.
 
 Every viable shot carries five marks:
 
-| Glyph | Name | Scale | Who sets it |
-|---|---|---|---|
+| Glyph     | Name                 | Scale           | Who sets it                                                       |
+| --------- | -------------------- | --------------- | ----------------------------------------------------------------- |
 | **֎🇦🇮** | AI quality (pending) | 1–99 percentile | X — after ALL editing, scored against every shot already produced |
-| **֎** | Final quality | 1–99 | Collin — adjusts the AI score on review |
-| **✔️** | Response interest | 1–99 | Whoever logs the owner's reply |
-| **🔗** | Credits to viable | credits | Total spend incl. regens |
-| **⚡** | Efficiency | derived | **⚡ = √(֎ × ✔️) / 🔗** |
+| **֎**     | Final quality        | 1–99            | Collin — adjusts the AI score on review                           |
+| **✔️**    | Response interest    | 1–99            | Whoever logs the owner's reply                                    |
+| **🔗**    | Credits to viable    | credits         | Total spend incl. regens                                          |
+| **⚡**     | Efficiency           | derived         | **⚡ = √(֎ × ✔️) / 🔗**                                            |
 
 ⚡ uses ֎ when Collin has reviewed, else ֎🇦🇮 — same field, different
 materialization, and the review queue in the Shot Quality Scoring dashboard
