@@ -291,7 +291,7 @@ def main():
                chip(r[3], 0.0, 0.30, invert=True, fmt="{:.1%}") if r[3] is not None else None]
               for r in rows]
     body += table(["Month", "Listings", "Shots (cap 60-100)", "Abandon Rate (flag >20%)"], styled)
-    write("Shot Quality Scoring", "Shot Quality Scoring Dashboard", body)
+    write("_Shot Quality Scoring", "Shot Quality Scoring Dashboard", body)
 
     # ---- Format & Overlay ----
     body = header("Format & Overlay Dashboard",
@@ -367,7 +367,7 @@ def main():
                    "Avg \u2714\uFE0F", "Avg \u058e", "Credits"], styled)
     body += ("\n> Cross-tier comparison happens HERE on response rate — never on \u26A1 "
              "(the credit denominator structurally favors cheap tiers).\n")
-    write("Production & Distribution", "Production & Distribution Dashboard", body)
+    write("_Production & Distribution", "Production & Distribution Dashboard", body)
 
     # ---- Filename materialization (DB -> Analytics\Shots mp4 names) ----
     if not DEMO:
