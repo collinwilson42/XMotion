@@ -18,7 +18,7 @@ growth:
 
 # XMotion — Higgsfield Walkthrough Prompting Skill
 
-> **Purpose:** The canonical production reference for turning still listing photos into cinematic property walkthrough videos in Higgsfield. This is the Studio account's "how we generate" bible and the "what good looks like" production standard. Everything here is field-tested and logged — when we learn something new, it gets added.
+> **Purpose:** The canonical production reference for turning still listing photos into cinematic property walkthrough videos in Higgsfield. This is the Studio account's "how we generate" bible and the VA's "what good looks like" standard. Everything here is field-tested and logged — when we learn something new, it gets added.
 
 ---
 
@@ -145,7 +145,7 @@ For a **studio or open-plan** unit, a single **FPV Drone** or **Handheld** glide
 
 ## Findings log
 
-*Add dated entries as we learn what actually works — model comparisons, presets that warp, prompt tweaks that fixed drift. This section is the compounding asset: every session benefits from every lesson.*
+*Add dated entries as we learn what actually works — model comparisons, presets that warp, prompt tweaks that fixed drift. This section is the compounding asset: every VA benefits from every lesson.*
 
 - *(2026-06-30) Skill created from field research + first-principles. First live model test pending on block `PM_3-59_4-04` (studio, FPV sweep on the whole-room reveal frame).*
 
