@@ -321,16 +321,40 @@ def main():
                   "budget remaining inverted: low = red. Response rate green at 50%+.")
     body += ("> **Scope:** credit budgets and the tier A/B outreach experiment. "
              "All quality/efficiency scoring (\u058e, \u2714\uFE0F, \u26A1, review queue) "
-             "lives in `Analysis\\Shot Quality Scoring`.\n\n"
-             "## Budget Status (month \u00d7 producer)\n\n")
+             "lives in `Analysis\\Shot Quality Scoring`.\n\n")
+
+    # ---- Credit Pool Budget (preview 66.7% / reserve 33.3%) ----
+    def _cfg(k, d):
+        r = cur.execute("SELECT value FROM config WHERE key=?", (k,)).fetchone()
+        return r[0] if r is not None else d
+    plan = float(_cfg("plan_monthly_credits", 1000))
+    ppct = float(_cfg("preview_pct", 0.667))
+    rpct = float(_cfg("reserve_pct", 0.333))
+    prev_pool, res_pool = plan * ppct, plan * rpct
+    _m = datetime.now().strftime("%Y-%m")
+    prev_spent = cur.execute("SELECT COALESCE(SUM(credits_used),0) FROM shots"
+                             " WHERE substr(date_produced,1,7)=? AND COALESCE(status,'')!='reserve'", (_m,)).fetchone()[0]
+    res_spent = cur.execute("SELECT COALESCE(SUM(credits_used),0) FROM shots"
+                            " WHERE substr(date_produced,1,7)=? AND status='reserve'", (_m,)).fetchone()[0]
+    body += "## Credit Pool Budget (this month)\n\n"
+    body += (f"> Plan **{plan:g} credits/mo**, split **{ppct:.1%} preview / {rpct:.1%} reserve**. "
+             "Previews are what we SEND to owners; reserve funds full walkthroughs for owners who respond.\n\n")
+    _pool = [["Preview", f"{ppct:.1%}", f"{prev_pool:g}", f"{prev_spent:g}",
+              bar(prev_pool - prev_spent, 0, prev_pool or 1, fmt="{:.0f}")],
+             ["Reserve", f"{rpct:.1%}", f"{res_pool:g}", f"{res_spent:g}",
+              bar(res_pool - res_spent, 0, res_pool or 1, fmt="{:.0f}")]]
+    body += table(["Pool", "Share", "Allocated", "Spent", "Remaining"], _pool)
+
+    body += "\n## Budget Status (month \u00d7 producer, within preview pool)\n\n"
     cols, rows = q(cur, "SELECT month, va, credits_allocated, credits_spent, credits_remaining"
                         " FROM v_budget_status ORDER BY month, credits_allocated DESC")
     styled = [[r[0], r[1], f"{r[2]:g}", f"{r[3]:g}",
                bar(r[4], 0, r[2] or 1, fmt="{:.1f}") if r[4] is not None else None] for r in rows]
     body += table(["Month", "Producer", "Allocated", "Spent", "Remaining"], styled)
-    body += ("\n> July 2026 split (rev 2): Collin 40% \u00b7 Jaisa 20% \u00b7 Richlan 20% \u00b7 "
-             "house reserve 20%. Reserve uses: (1) finishing preview clips that get interest, "
-             "(2) a prospective partner allocation, (3) efficiency raise — top \u26A1 of the prior month.\n")
+    body += ("\n> Budget model (rev 3): monthly credits split **66.7% preview / 33.3% reserve** "
+             "(config keys: plan_monthly_credits, preview_pct, reserve_pct). Producer rows draw from the "
+             "preview pool. Reserve funds: (1) full walkthroughs for owners who respond to a preview, "
+             "(2) a prospective-partner allocation, (3) an efficiency raise for the top \u26A1 producer of the prior month.\n")
     body += "\n## Tier A/B Results (outreach experiment)\n\n"
     cols, rows = q(cur, "SELECT tier, shots, sent, responses, response_rate, avg_response,"
                         " avg_quality, credits FROM v_tier_ab ORDER BY tier")
