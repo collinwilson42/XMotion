@@ -79,6 +79,31 @@ Every prompt ends with the same guardrails: **photorealistic, stable geometry, n
 
 ---
 
+## Preview Tier Catalog (outreach A/B test — 2026-07 campaign)
+
+Previews are what we SEND to owners; full walkthroughs are produced only after a
+deal. Every preview is one tier, assigned by even rotation. All clips Kling 3.0
+**pro**, silent, 16:9 (7.5/10s → 17.5 cr, 5s → 8.75 cr at current plan).
+
+| Tier | Length | Composition | Credits | Anchor frames |
+|---|---|---|---|---|
+| **Tier-1A** | 15s | 10s pro → 5s pro | 26.25 | 4 (2 pairs) |
+| **Tier-1B** | 15s | 5s pro → 10s pro | 26.25 | 4 (2 pairs) |
+| **Tier-1C** | 15s | 5s → 5s → 5s pro | 26.25 | 4 (chained: A→B, B→C, C→D) |
+| **Tier-2A** | 10s | single 10s pro | 17.5 | 2 |
+| **Tier-2B** | 10s | two 5s pro | 17.5 | 3–4 |
+| **Tier-3A** | 5s | single 5s pro | 8.75 | 2 |
+
+The Tier-1 family holds length (15s) and cost (26.25) constant while varying only
+**structure** — long-lead (1A), long-close (1B), or three beats (1C): the clean
+ablation. Chained tiers stitch at shared exact frames (pixel-anchored cuts); trim
+~0.3s each side of every junction in the edit. Kling takes exactly TWO anchors
+per generation (start_image + end_image) at any duration — three enforced frames
+is always two generations, never one. Catalog + budgets + response scoring:
+`Onboarding\Week 2 - Production & Distribution.md`.
+
+---
+
 ## The rules (non-negotiable)
 
 - **Slow moves only.** Speed is what exposes AI artifacts. When in doubt, slower.

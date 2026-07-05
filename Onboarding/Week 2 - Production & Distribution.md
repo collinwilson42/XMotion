@@ -81,13 +81,19 @@ only reads if every tier gets reps.
 |---|---|---|---|
 | **Tier-1A** | 15s | 10s pro → 5s pro | 26.25 |
 | **Tier-1B** | 15s | 5s pro → 10s pro | 26.25 |
+| **Tier-1C** | 15s | 5s → 5s → 5s pro (chained) | 26.25 |
 | **Tier-2A** | 10s | single 10s pro | 17.5 |
 | **Tier-2B** | 10s | 2× 5s pro | 17.5 |
 | **Tier-3A** | 5s | single 5s pro | 8.75 |
 
-**What each tier is testing:** 1A vs 1B = does the long shot lead or close?
+**What each tier is testing:** the Tier-1 family is the clean ablation — same
+length (15s), same cost (26.25), only the **structure** changes: long shot leads
+(1A), long shot closes (1B), or three 5s beats chained at shared frames (1C).
 2A vs 2B = one continuous move vs a cut? Tier-3 = the floor — is a single money
-shot enough to get a reply?
+shot enough to get a reply? Tier-1C production note: chained = 4 anchor frames
+(A→B, B→C, C→D), two pixel-anchored stitch points; Kling takes exactly two
+anchors per generation at any duration, so three enforced frames is always two+
+generations, never one.
 
 **How we judge the test:** cross-tier winner = **response rate** (Production &
 Distribution dashboard). Producer skill within a tier = **⚡ efficiency** (Shot

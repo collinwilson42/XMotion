@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS shots (
   listing_id INTEGER REFERENCES listings(listing_id),
   va_id INTEGER NOT NULL REFERENCES vas(va_id),
   date_produced TEXT NOT NULL,
-  tier TEXT NOT NULL,            -- Tier-1A | Tier-1B | Tier-2A | Tier-2B | Tier-3A
+  tier TEXT NOT NULL,            -- Tier-1A | Tier-1B | Tier-1C | Tier-2A | Tier-2B | Tier-3A
   job_ids TEXT,                  -- comma-joined Higgsfield job UUIDs incl. regens
   credits_used REAL,             -- LINK glyph: total credits to viable shot (incl. regens)
   quality_ai INTEGER,            -- AI percentile 1-99, post-edit, PENDING review
