@@ -143,11 +143,42 @@ For a **studio or open-plan** unit, a single **FPV Drone** or **Handheld** glide
 
 ---
 
+## Render Save Automation (v-naming trigger — 2026-07-05, Collin directive)
+
+**TRIGGER: the moment a rendered clip is judged a keeper, save it to the
+producer's batch folder under the v-naming convention. No keeper lives only in
+Higgsfield's cloud.**
+
+Location: `C:\dev\XMotion\Production\Clips\{agent}\{YYYY-MM-DD}_{Batch-Name}\`
+
+Naming grammar:
+- **Raw keeper (pair):** `_v1.0_{startframe}_{endframe}.mp4` — e.g. `_v1.0_030_009.mp4`
+- **Single-frame clip:** `_v1.0_{frame}.mp4`
+- **Merged/edited clip:** frame chain concatenates in final play order — e.g.
+  `_v1.0_045_042_030_009.mp4` (approach pair + bedroom pair merged)
+- **Regen of same frames:** bump minor — `_v1.1_030_009.mp4`
+- **Structural re-edit of a merge:** bump major — `_v2.0_...`
+
+The filename IS the edit history — read the frame chain and the montage
+reconstructs without opening the file. At review time WIZX writes each keeper's
+expected filename + Higgsfield job ID into the batch `_MANIFEST.md`; whoever
+downloads saves under that exact name. Once the ffmpeg lane is live, trims and
+merges emit these names automatically. Production v-names are working names —
+the shipped deliverable copy in `Analytics\Shots\` takes the scored glyph
+grammar via the materializer at T12; the v-file stays in Production as the
+editable source.
+
+---
+
 ## Findings log
 
 *Add dated entries as we learn what actually works — model comparisons, presets that warp, prompt tweaks that fixed drift. This section is the compounding asset: every VA benefits from every lesson.*
 
 - *(2026-06-30) Skill created from field research + first-principles. First live model test pending on block `PM_3-59_4-04` (studio, FPV sweep on the whole-room reveal frame).*
+- *(2026-07-03) Batch 1, listing rooms/1718466620893746332, Kling 3.0 **std**, 6 clips: 2/6 keepers, both exteriors (045→042 approach, 054→053 dusk closer). ALL interiors failed on std. Mode doctrine: **pro for interiors; std only for strong-anchor exteriors.***
+- *(2026-07-03) Kling 3.0 **pro**, 10s, 007→015 living path with curve named in prompt: KEEPER — best clip of the run. Tail defect: prop (plant) vanished in final seconds — long-generation drift; fix = trim to 8s. Rule: on 10s generations, expect to trim the tail.*
+- *(2026-07-03) First+last frame pairs: junctions at shared exact frames cut pixel-perfect. Pair rules that held: same light regime, same screen direction, name any turn, demand constant speed through endpoints. Hidden 180° rotations between anchors = failure; reframe as orbit around a subject both frames contain.*
+- *(2026-07-05) Kling 3.0 accepts exactly TWO image anchors (start+end) at any duration — three enforced frames is always two generations stitched at the shared middle frame.*
 
 ---
 
