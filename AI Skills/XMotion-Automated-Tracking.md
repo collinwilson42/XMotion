@@ -30,28 +30,28 @@ growth:
 
 ## 1. The full trigger table
 
-| # | Lifecycle moment | DB operation | Fields |
-|---|---|---|---|
-| T1 | VA starts a listing | `INSERT INTO listings` | `date_started, va_id, property_link, location_id, images_n, s_per_image` (S from rotation, §3), `outcome='In-Progress'` |
-| T2 | Capture block scouted / quality scored | `UPDATE listings` | `ambiguity` (1/2/4/8/16), `noise` (1–5), `quality_sd=√(amb×noise)`, `quality_verdict` (PASS ≤2.0 / MAYBE ≤3.5 / FAIL) |
-| T3 | Shot 1 fired | `UPDATE listings` | `shot1_result` (S/F), `shots_used=1`, **plus scoring stamp**: `model`, `model_quality_pctile`, `shot_quantity_pctile`, `shot_potential=√(MQ×SQ)` (ⲱ) |
-| T4 | Shot 2 fired (Two-Shot Rule) | `UPDATE listings` | `shot2_result`, `shots_used=2` (re-stamp ⲱ fields if the model changed) |
-| T5 | Rendered video reviewed | `UPDATE listings` | `output_quality` (Ⲱ, 1–100), `shot_resonance = output_quality × shot_potential` (Ѡ) |
-| T6 | Video format finalized | `UPDATE listings` | `frame_aspect` (16:9/9:16/1:1), `content_aspect` (e.g. 3:4), `resolution_out`, `border_type` (none/black/white) |
-| T7 | Overlay applied | `UPDATE listings SET overlay_template_id=?` | FK into `overlay_templates` (A-series); create the template row first if it's a new A-{x} |
-| T8 | Offer sent | `UPDATE listings SET outcome='Sent'` + `INSERT INTO offers` | `offer_date, offer_price` (295/395) |
-| T9 | Offer result lands | `UPDATE offers` | `offer_result` (Accepted/Declined/No-Reply), `responded_date` |
-| T10 | Listing abandoned | `UPDATE listings` | `outcome='Abandoned'`, `abandon_reason` (Low-Res/Fisheye/Odd-Angles/Too-Few/Lighting/Clutter/Ambiguity) |
-| T11 | New X-Factor spotted | `INSERT INTO x_factors` + `INSERT INTO listing_x_factors` | name, category, spotted_by |
-| T12 | Every 10 offers | Report `v_s_performance` rollup in chat | (config: `rollup_every_offers`) |
-| T13 | After 20 offers, clear S winner | `UPDATE config SET value=? WHERE key='s_locked'` | (config: `lock_threshold_offers`) |
-| T14 | Shot declared viable, mp4 saved to `Analytics\Shots\` | `INSERT INTO shots` | `listing_id, va_id, date_produced, tier, job_ids, credits_used (🔗 incl. regens), file_path, status='viable'` |
-| T15 | All editing done → AI quality review | `UPDATE shots` | `quality_ai` (֎🇦🇮, 1–99 percentile vs. all prior produced shots) |
-| T16 | Collin final review | `UPDATE shots` | `quality_final` (֎, 1–99) |
-| T17 | Preview sent to owner | `UPDATE shots` | `sent_date, status='sent'` |
-| T18 | Owner response / close | `UPDATE shots` | `response_score` (✔️ 1–99, anchored: 1 none · 20 ack · 40 question · 60 interest · 80 verbal yes · 99 closed), `status='responded'/'closed'` |
-| **T-B** | **Before ANY generation** | Check `v_budget_status` for the producer | if remaining < tier cost → stop, escalate to Collin (reserve decision) |
-| **T∀** | **After ANY write above** | **`py _Tools\xmotion_materialize.py`** | refreshes all 6 dashboards + rematerializes shot filenames from DB truth |
+| #       | Lifecycle moment                                      | DB operation                                                | Fields                                                                                                                                               |
+| ------- | ----------------------------------------------------- | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| T1      | VA starts a listing                                   | `INSERT INTO listings`                                      | `date_started, va_id, property_link, location_id, images_n, s_per_image` (S from rotation, §3), `outcome='In-Progress'`                              |
+| T2      | Capture block scouted / quality scored                | `UPDATE listings`                                           | `ambiguity` (1/2/4/8/16), `noise` (1–5), `quality_sd=√(amb×noise)`, `quality_verdict` (PASS ≤2.0 / MAYBE ≤3.5 / FAIL)                                |
+| T3      | Shot 1 fired                                          | `UPDATE listings`                                           | `shot1_result` (S/F), `shots_used=1`, **plus scoring stamp**: `model`, `model_quality_pctile`, `shot_quantity_pctile`, `shot_potential=√(MQ×SQ)` (ⲱ) |
+| T4      | Shot 2 fired (Two-Shot Rule)                          | `UPDATE listings`                                           | `shot2_result`, `shots_used=2` (re-stamp ⲱ fields if the model changed)                                                                              |
+| T5      | Rendered video reviewed                               | `UPDATE listings`                                           | `output_quality` (Ⲱ, 1–100), `shot_resonance = output_quality × shot_potential` (Ѡ)                                                                  |
+| T6      | Video format finalized                                | `UPDATE listings`                                           | `frame_aspect` (16:9/9:16/1:1), `content_aspect` (e.g. 3:4), `resolution_out`, `border_type` (none/black/white)                                      |
+| T7      | Overlay applied                                       | `UPDATE listings SET overlay_template_id=?`                 | FK into `overlay_templates` (A-series); create the template row first if it's a new A-{x}                                                            |
+| T8      | Offer sent                                            | `UPDATE listings SET outcome='Sent'` + `INSERT INTO offers` | `offer_date, offer_price` (295/395)                                                                                                                  |
+| T9      | Offer result lands                                    | `UPDATE offers`                                             | `offer_result` (Accepted/Declined/No-Reply), `responded_date`                                                                                        |
+| T10     | Listing abandoned                                     | `UPDATE listings`                                           | `outcome='Abandoned'`, `abandon_reason` (Low-Res/Fisheye/Odd-Angles/Too-Few/Lighting/Clutter/Ambiguity)                                              |
+| T11     | New X-Factor spotted                                  | `INSERT INTO x_factors` + `INSERT INTO listing_x_factors`   | name, category, spotted_by                                                                                                                           |
+| T12     | Every 10 offers                                       | Report `v_s_performance` rollup in chat                     | (config: `rollup_every_offers`)                                                                                                                      |
+| T13     | After 20 offers, clear S winner                       | `UPDATE config SET value=? WHERE key='s_locked'`            | (config: `lock_threshold_offers`)                                                                                                                    |
+| T14     | Shot declared viable, mp4 saved to `Analytics\Shots\` | `INSERT INTO shots`                                         | `listing_id, va_id, date_produced, tier, job_ids, credits_used (🔗 incl. regens), file_path, status='viable'`                                        |
+| T15     | All editing done → AI quality review                  | `UPDATE shots`                                              | `quality_ai` (֎🇦🇮, 1–99 percentile vs. all prior produced shots)                                                                                   |
+| T16     | Collin final review                                   | `UPDATE shots`                                              | `quality_final` (֎, 1–99)                                                                                                                            |
+| T17     | Preview sent to owner                                 | `UPDATE shots`                                              | `sent_date, status='sent'`                                                                                                                           |
+| T18     | Owner response / close                                | `UPDATE shots`                                              | `response_score` (✔️ 1–99, anchored: 1 none · 20 ack · 40 question · 60 interest · 80 verbal yes · 99 closed), `status='responded'/'closed'`         |
+| **T-B** | **Before ANY generation**                             | Check `v_budget_status` for the producer                    | if remaining < tier cost → stop, escalate to Collin (reserve decision)                                                                               |
+| **T∀**  | **After ANY write above**                             | **`py _Tools\xmotion_materialize.py`**                      | refreshes all 6 dashboards + rematerializes shot filenames from DB truth                                                                             |
 
 ## 2. Computed-at-write values (X does the math, SQLite stays portable)
 
