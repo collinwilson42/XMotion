@@ -57,7 +57,7 @@ There are nine pieces to your workstation, and they build on each other. By the 
 8. **Install the capture tool and take your first shots**  
     The XCopy tool is how you grab listing photos at full resolution into timestamped folders. You’ll run it from the terminal, confirm it works, then practice on a real Airbnb property — choosing one with strong walkthrough potential. This is the first real production step, and it feeds directly into the scoring system.
     
-9. **Give Claude access to your work folder**  
+9. **Give Claude access to your work folder & ** 
     Finally, you’ll add a filesystem MCP server so Claude can read the captured images and the project files directly. That means you’ll be able to say “grade the thumbnails in today’s capture block” and Claude will do it without you uploading anything. That’s the bridge from setup into real work.
     
 
@@ -315,7 +315,7 @@ Mastering these three variables turns sourcing from guesswork into a repeatable 
 
 ---
 
-## Part 9 — Power-Ups: the extended toolkit *(optional, once Parts 1–8 are solid)*
+## Part 9 — Level-Ups: the extended toolkit *(Once Parts 1–8 are solid)*
 
 Everything up to here gets you producing. This part makes Claude *smarter over time*. Five power-ups, and here's the key thing to understand before installing any of them:
 
@@ -439,8 +439,6 @@ npx skills add rebelytics/one-skill-to-rule-them-all --skill task-observer -g -y
 **How to use it strategically:** This is how the playbook writes itself. Right now, when a VA discovers a better way to source listings or a scoring shortcut, that insight lives in one person's head and evaporates. With Task Observer running, those moments get logged automatically, and a weekly review ("Claude, show me this week's observations — what should become a skill?") turns them into permanent team capability. One known quirk: it can forget to activate when you're deep in a task, so the reliable setup is adding one line to your project's `CLAUDE.md` telling Claude to invoke it at session start. Pair it with claude-mem and you have a complete learning loop — claude-mem remembers *what happened*, Task Observer notices *what it means*.
 
 **Where it works:** Claude Code sessions, same as other skills.
-
-### 9.6 — The install order that makes sense
 
 1. **Find Skills** first — it's the gateway and takes thirty seconds.
 2. **claude-mem** second — the earlier it starts, the more history it has. Add the MCP config entry after confirming the plugin works.
