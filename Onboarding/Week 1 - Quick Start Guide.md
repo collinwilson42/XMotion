@@ -1,18 +1,19 @@
 ---
 name: XMotion Quick Start
 description: Week 1 workstation setup and Airbnb sourcing/scoring workflow for new XMotion virtual assistants. Covers installs, Windows MCP, XCopy capture tool, Obsidian vault, Outlook, two‑loop property evaluation, and Claude‑guided scoring. Non‑technical audience — every step runs through Claude.
-tools: windows-mcp, filesystem, memory, sequential-thinking
+tools: windows-mcp, filesystem, memory, sequential-thinking, claude-mem, find-skills, superpowers, impeccable, task-observer
 type: onboarding
 domain: va-training
 status: live
-version: 1.0
-updated: 2026-07-03
+version: 1.2
+updated: 2026-07-10
 audience: XMotion VAs (Jaisa & Richlan)
 maintainer: XMotion
 signed: Collin 
 growth:
   - Add video generation loop once Higgsfield integration is stable
   - Build automated S‑value rotation and conversion tracking per the analytics pipeline
+  - Roll Power-Ups (Part 9) from optional to standard once claude-mem stability is confirmed on VA machines
 ---
 
 # XMotion — Week 1 Quick Start Guide
@@ -77,7 +78,6 @@ winget install -e --id OpenJS.NodeJS.LTS
 winget install -e --id Python.Python.3.13
 winget install -e --id Git.Git
 winget install --id Microsoft.PowerToys
-winget install -i -e --id 9NRX63209R7B --source msstore --accept-package-agreements
 ```
 
 What each one is:
@@ -87,7 +87,7 @@ What each one is:
 - **Node.js** — runs behind the scenes so Claude's tools work. (No window opens — that's normal.)
 - **Python** —  (Also no window — normal.)
 - **Git** — will use later for refreshing the obsidian vault or an automatic sync
-- **Power Toys** — set Fancy Zones to priority for efficiency (hold shift while moving a window to lock it to a zone)
+- **Power Toys** — priority layout mode
 - **Outlook (new)** — free Microsoft Store client for the shared team inbox used for customer outreach
 
 If a link is easier than the command for any app, use the link — same result.
@@ -124,11 +124,7 @@ Open **Claude** (Start menu → type "Claude"). Sign in with the **XMotion compa
 
 ## Part 3 — Your first mission: teach Claude to control your computer
 
-This is the fun part. You're going to have Claude set itself up to control your Windows PC. This is called **Windows MCP**, and once it's on, Claude can create folders, edit files, and run programs *for* you.
-
-**Step 3.1 — Introduce yourself.** Open a **new chat** in Claude, make sure the model is set to **Opus** (top of the chat), and paste this:
-
-> *Hi Claude, My name is Richlan/Jaisa, I'm a new XMotion team member setting up my workstation. I'm not very technical, so please keep instructions simple and step-by-step. I want to set up three MCP servers in my Claude Desktop config: **windows-mcp** (so you can control my Windows PC), **memory**, and **sequential-thinking**. Can you walk me through installing windows-mcp and give me the exact JSON to paste? My computer is Windows.*
+You're going to have Claude set itself up to control your Windows PC. This is called **Windows MCP**, and once it's on, Claude can create folders, edit files, and run programs *for* you.
 
 Claude will walk you through installing **windows-mcp** and hand you the config. Follow its steps — it may ask you to run one install command. That's expected.
 
@@ -269,13 +265,33 @@ Then bring your 9 to Claude with a quick one-line read on each, and let it press
 Claude ranks them; you capture the top picks with XCopy (Part 6).
 
 ### Loop 2 — Score a captured set
-Once you've captured a listing, Claude grades the real photos against our Shot Quality Equation. Reference the skill files, then:
+Once you've captured a listing, Claude grades the real photos against our **Shot Quality Equation**. Here's the system in brief, so the numbers Claude gives you mean something:
 
-> *"Hi, this is [your name]. Batch-grade the thumbnails at `C:\dev\XMotion\Captures\[date]\[block]\TN_[block]` for walkthrough potential — read them efficiently as a batch, not one by one. Be honest: does it pass our standard? Give me the score, the keeper frames in walkthrough order, and what to drop."*
+**How the scoring works (Image Scorer v2 — the current standard):**
+
+```
+Score = √( Flow × Quality × Location × MoneyShot ) / √( Ambiguity × Noise )
+```
+
+Every factor is a **1–99 integer** — one scale family everywhere. The four on top are what the shot *offers* (how well rooms connect, how good the photo is, how strong the market, whether there's a hero frame). The two on the bottom are what works *against* it: **Ambiguity** (can the space be reconstructed, or will the AI hallucinate the layout?) and **Noise** (compression, blur, watermarks, low resolution). Averaged across a block, the full ratio gives the catalog's **Shot Potential (ⲱ)**.
+
+The bottom of the fraction alone is the **pre-shot gate**, called Set Degradation:
+
+```
+⊜ = √( Ambiguity × Noise )     →   ⊜ ≤ 20 PASS  ·  20–30 MAYBE  ·  > 30 FAIL
+```
+
+The gate exists to protect credits: a FAIL block gets logged as abandoned and never generated, no matter how pretty individual photos are. Ambiguity is deliberately the dominant failure mode — a clean photo of a confusing space is more dangerous than a soft photo of a clear one, because the AI will confidently invent rooms that don't exist.
+
+> *(If you see old notes with scores like "SD = 2.83" — that's the retired 1–9 scale. Multiply by ~10 to translate: old 2.0 PASS ≈ new 20 PASS. Same verdicts, new numbers.)*
+
+Reference the skill files, then:
+
+> *"Hi, this is [your name]. Batch-grade the thumbnails at `C:\dev\XMotion\Captures\[date]\[block]\TN_[block]` for walkthrough potential — read them efficiently as a batch, not one by one. Be honest: does it pass our standard? Give me the ⊜ gate verdict, the Shot Potential (ⲱ), the keeper frames in walkthrough order, and what to drop."*
 
 **Practice on the sample first.** Your repo ships with a real block at `Captures\2026-06-27\PM_3-59_4-04`. Run the scoring prompt on it — you should get close to this:
 
-> **PM_3-59_4-04** — Noise ~2 (clean gallery exports). Ambiguity 4 as-is → 2 once cut to unit-flow. **SD = √(4×2) ≈ 2.83 → MAYBE as-is → √(2×2) = 2.0 → PASS after light prep.** A well-styled open studio, prime walkthrough material — one FPV sweep traverses the whole space. Keepers in order: 003 → 001 → 010 → 005 → 008 → 009 → 011. Drop the redundant wides (002, 006); hold the vignettes (004, 007) as B-roll; amenities as an optional coda.
+> **PM_3-59_4-04** — Noise ~20 (clean gallery exports). Ambiguity 40 as-is → 20 once cut to unit-flow. **⊜ = √(40×20) ≈ 28 → MAYBE as-is → √(20×20) = 20 → PASS after light prep.** A well-styled open studio, prime walkthrough material — one FPV sweep traverses the whole space. Keepers in order: 003 → 001 → 010 → 005 → 008 → 009 → 011. Drop the redundant wides (002, 006); hold the vignettes (004, 007) as B-roll; amenities as an optional coda.
 
 If your result looks like that, your setup works and you've seen the bar. That's the standard.
 
@@ -298,9 +314,146 @@ Find Airbnb listings where you can confidently predict a property’s walkthroug
 Mastering these three variables turns sourcing from guesswork into a repeatable skill.
 
 ---
+
+## Part 9 — Power-Ups: the extended toolkit *(optional, once Parts 1–8 are solid)*
+
+Everything up to here gets you producing. This part makes Claude *smarter over time*. Five power-ups, and here's the key thing to understand before installing any of them:
+
+> **Only one of these is an "MCP server" that goes in your config file.** The other four are **skills and plugins** — they install differently and live in different places. Knowing which is which saves you an hour of confusion.
+
+**The three layers, in plain English:**
+- **MCP servers** = Claude's *hands*. They live in `claude_desktop_config.json` and let Claude touch things (your files, your windows, its memory). You already have these from Parts 3 and 7.
+- **Skills** = Claude's *training*. Markdown instruction files that teach Claude a specific craft. They auto-trigger when relevant. Our `/XM` files are skills.
+- **Plugins** = Claude's *reflexes*. They hook into Claude Code (the coding version of Claude) and fire automatically at certain moments — session start, after a tool runs, etc.
+
+### 9.0 — The canonical config (reference)
+
+This is what a fully-loaded `claude_desktop_config.json` looks like on a team machine. Replace `YOUR-USERNAME` with your Windows username. **Only touch the `mcpServers` block** — if your file has other keys (like `preferences`), leave them exactly as they are; they're machine-specific.
+
+```json
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "C:\\Users\\YOUR-USERNAME\\AppData\\Roaming\\npm\\mcp-server-filesystem.cmd",
+      "args": ["C:\\dev"],
+      "timeout": 60000
+    },
+    "windows-mcp": {
+      "command": "C:\\Users\\YOUR-USERNAME\\.local\\bin\\windows-mcp.exe",
+      "args": [],
+      "timeout": 120000
+    },
+    "memory": {
+      "command": "C:\\Users\\YOUR-USERNAME\\AppData\\Roaming\\npm\\mcp-server-memory.cmd",
+      "args": [],
+      "timeout": 60000
+    },
+    "sequential-thinking": {
+      "command": "C:\\Users\\YOUR-USERNAME\\AppData\\Roaming\\npm\\mcp-server-sequential-thinking.cmd",
+      "args": [],
+      "timeout": 60000
+    },
+    "claude-mem-search": {
+      "command": "node",
+      "args": ["C:\\Users\\YOUR-USERNAME\\.claude\\plugins\\marketplaces\\thedotmack\\plugin\\mcp-server.cjs"],
+      "timeout": 60000
+    }
+  }
+}
+```
+
+Notes on this block:
+- If your servers were installed with `npx` (the Part 3 style), that works too — the `.cmd` paths above are just the direct-install form and start faster.
+- The `claude-mem-search` entry **only works after you install claude-mem in 9.3** — add it last, and ask Claude to verify the exact path to `mcp-server.cjs` on your machine first, since the plugin folder location can vary by version.
+- After any config change: save, fully exit Claude (top-left menu → File → Exit), reopen.
+
+### 9.1 — Find Skills *(skill — the app store browser)*
+
+**What it is:** A meta-skill that turns Claude into its own package manager. When you ask "is there a skill for X?" or "how do I do X?", it searches the open skills registry (skills.sh), checks quality signals like install counts and source reputation, and offers to install what it finds.
+
+**Install** (paste into a terminal):
+```
+npx skills add vercel-labs/skills --skill find-skills -g -y
+```
+The `-g` installs it globally so it's available in every project.
+
+**How to use it strategically:** This is the *first* power-up to install because it's the gateway to all the others — once it's in, you discover tools by asking instead of Googling. The workflow discipline: when you hit a task that feels like "someone must have solved this before" (PDF wrangling, changelog writing, accessibility checks), ask Claude *"is there a skill for this?"* before building a manual workflow. One caution: not everything in the registry is good. Prefer skills with 1K+ installs from known sources (vercel-labs, anthropics), and ask Claude to summarize what a skill does before installing it. Treat it like the app store — browse with judgment.
+
+**Where it works:** Skills install into agent skill folders (`.claude/skills/`, `.agents/skills/`), which coding agents like Claude Code read natively. Regular Desktop *chat* doesn't auto-load these folders — for chat, the `/XM` pattern (account-level skills) remains our delivery method. Practical rule: **Find Skills lives in your coding sessions; `/XM` lives in your chat sessions.**
+
+### 9.2 — Superpowers *(Claude Code plugin — the senior-engineer discipline)*
+
+**What it is:** A full software development methodology installed as a plugin. Instead of Claude jumping straight into writing code, it brainstorms a spec with you first, writes an implementation plan, then executes with test-driven development and self-review. It's the difference between "intelligent autocomplete" and a disciplined engineer.
+
+**Install** (inside an active Claude Code session — *not* a terminal, not the config file):
+```
+/plugin install superpowers@claude-plugins-official
+```
+Then restart the session. Verify with `/plugin` — you should see superpowers listed and active.
+
+**How to use it strategically:** This is for **build days, not production days**. When we're extending XCopy, adding scoring automation, or building a new tool in `_Tools`, Superpowers forces the two habits that prevent expensive rework: (1) the brainstorm phase surfaces the real requirement before any code exists — *read the plan it shows you, don't just approve it*, because a plan you actually read prevents more bugs than any review catches later; and (2) red/green TDD means every change ships with proof it works. For quick throwaway scripts, tell Claude "skip planning, just write it" and the skills stay dormant — it adapts to the stakes. VAs won't need this in Week 1; it becomes relevant the day you graduate from *using* the tools to *improving* them.
+
+**Where it works:** Claude Code only (terminal or the Code tab in the desktop app). It does nothing in regular chat.
+
+### 9.3 — claude-mem *(plugin + MCP server — the long-term memory)*
+
+**What it is:** Persistent memory across sessions. A background observer captures what happens while Claude works — decisions, bug fixes, discoveries — compresses it with AI into a local SQLite database, and injects the relevant history into your next session. The "re-explain everything every morning" tax disappears.
+
+**Install** (terminal):
+```
+npx claude-mem install
+```
+> ⚠️ **Do not use `npm install -g claude-mem`** — that installs only the library without registering the hooks or starting the worker. The `npx claude-mem install` command is the whole ceremony.
+
+Then optionally add the `claude-mem-search` MCP entry from 9.0 to your Desktop config, which lets Desktop chat *search* those memories too.
+
+**How does this get along with our existing `memory` server?** They coexist cleanly because they do opposite jobs. The `memory` MCP is a **deliberate** knowledge graph — Claude writes to it when you say "remember that this client prefers X." claude-mem is **automatic** — it captures everything as you work without being asked. Think of `memory` as your labeled filing cabinet and claude-mem as security-camera footage with a search bar. Keep both: use `memory` for facts that must never be lost (client preferences, standing decisions, scoring conventions), and let claude-mem handle ambient session history.
+
+**How to use it strategically:** The payoff compounds. Week one it's learning your project and injecting a lot; after it has mapped your workflow, sessions start faster than before because Claude opens already knowing yesterday's capture blocks, which listings scored PASS, and what you were in the middle of. Two habits maximize it: start sessions by asking *"what were we working on?"* to pull relevant context, and wrap anything sensitive (passwords, client financials) in `<private>` tags in your prompts so it's excluded from storage. Check the web viewer at `localhost:37777` occasionally to see what it's remembering.
+
+**Where it works:** Fully in Claude Code; searchable from Desktop chat once the MCP entry is added.
+
+### 9.4 — Impeccable *(skill — the design taste layer)*
+
+**What it is:** A design-language skill that strips the "obviously AI-generated" tells out of anything visual Claude builds — the default fonts, the purple gradients, the cards-nested-in-cards look. One skill, 23 commands (`/impeccable audit`, `/impeccable polish`, `/impeccable critique`, and more), plus dozens of deterministic detector rules that catch design mistakes automatically.
+
+**Install** (terminal, from the root of the project you're working in):
+```
+npx impeccable install
+```
+Then, inside your coding tool: `/impeccable init` — it interviews you once about audience, brand, and voice, and writes that context to `PRODUCT.md`/`DESIGN.md` so every later command designs *for XMotion* instead of generically.
+
+**How to use it strategically:** Our product *is* visual — a listing video with amateur-looking overlays undercuts the entire premium positioning. Use it in a simple cadence: `/impeccable audit` before touching anything (find the issues), make your changes, `/impeccable polish` before anything ships (final cleanup). The `init` step is the strategic part — the ten minutes you spend defining XMotion's brand lane there pays out on every asset afterward, because the skill stops suggesting generic-SaaS aesthetics and starts enforcing *our* look. If you use one command constantly, pin it: `/impeccable pin audit` gives you `/audit` as a shortcut.
+
+**Where it works:** Coding harnesses (Claude Code, Cursor, etc.) working on real UI files. For pure chat-based design discussion, our existing brand skills carry the load.
+
+### 9.5 — Task Observer *(skill — the noticing layer)*
+
+**What it is:** A meta-skill that watches your work sessions and logs opportunities for creating or improving other skills. It captures patterns — moments where you corrected Claude, workflows you repeated three times, techniques that worked unusually well — and saves them as observations for review.
+
+**Install** (terminal):
+```
+npx skills add rebelytics/one-skill-to-rule-them-all --skill task-observer -g -y
+```
+
+**How to use it strategically:** This is how the playbook writes itself. Right now, when a VA discovers a better way to source listings or a scoring shortcut, that insight lives in one person's head and evaporates. With Task Observer running, those moments get logged automatically, and a weekly review ("Claude, show me this week's observations — what should become a skill?") turns them into permanent team capability. One known quirk: it can forget to activate when you're deep in a task, so the reliable setup is adding one line to your project's `CLAUDE.md` telling Claude to invoke it at session start. Pair it with claude-mem and you have a complete learning loop — claude-mem remembers *what happened*, Task Observer notices *what it means*.
+
+**Where it works:** Claude Code sessions, same as other skills.
+
+### 9.6 — The install order that makes sense
+
+1. **Find Skills** first — it's the gateway and takes thirty seconds.
+2. **claude-mem** second — the earlier it starts, the more history it has. Add the MCP config entry after confirming the plugin works.
+3. **Task Observer** third — it feeds off active work, so install before a real work week.
+4. **Superpowers** when you start *building* tools rather than using them.
+5. **Impeccable** when you touch anything visual — run `/impeccable init` the same day.
+
+After each install, the check is always the same: restart, ask Claude *"do you have access to [tool]?"*, and have it demonstrate once before relying on it.
+
+---
 ## You're set
 
-That's the workstation. To recap what you now have: Claude that can control your PC and read your project files, the capture tool ready to shoot listings, Obsidian to learn from, and your email for customers.
+That's the workstation. To recap what you now have: Claude that can control your PC and read your project files, the capture tool ready to shoot listings, Obsidian to learn from, and your email for customers. And when you're ready to level up, Part 9 turns that workstation into a system that remembers, notices, and improves itself.
 
 Welcome aboard. Let's build something nobody's done yet.
 
