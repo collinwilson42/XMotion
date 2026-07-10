@@ -197,7 +197,7 @@ Prompt 1: What hex colors would look good on transparent background? Can you cre
 
 
 ### Windows MCP 
-Prompt 2: *Using windows-mcp, please edit my Alacritty config file (`alacritty.toml`, usually in `%APPDATA%\alacritty\`). Set the window opacity to `0.33` and the hex codes the same as the artifact.
+Prompt 2: *Using windows-mcp, please edit my Alacritty config file (`alacritty.toml`, usually in `%APPDATA%\alacritty\`). Set the window opacity to `0.33` and the text hex codes the same as the artifact.
 
 Open Alacritty afterward — you should see the custom layout design. You just edited a system config file without touching a line of code yourself. That's the workflow for everything from here.
 
@@ -246,7 +246,8 @@ Two skill files hold our standards. Pull them into any chat so Claude grades by 
 
 (You can also point Claude at `C:\dev\XMotion\AI Skills`, but those files may lag — `/XM` is cleaner and always current.)
 
-### Loop 1 — Source 9 candidates (your eyes, Claude's judgment)
+### Loop 1 — Source 3 good candidates 
+
 Discovery is **your** job — you can browse and filter Airbnb in ways Claude can't. Put in real effort: open listings, study the photos, and find **9 strong candidates.** What you're hunting for:
 - Open-plan or clearly connected rooms — a readable path through the space
 - Bright, natural light
@@ -317,7 +318,7 @@ Mastering these three variables turns sourcing from guesswork into a repeatable 
 
 ## Part 9 — Level-Ups: the extended toolkit *(Once Parts 1–8 are solid)*
 
-Everything up to here gets you producing. This part makes Claude *smarter over time*. Five power-ups, and here's the key thing to understand before installing any of them:
+Everything up to here gets you producing. This part makes Claude *smarter over time*. Five level-ups, and here's the key thing to understand before installing any of them:
 
 > **Only one of these is an "MCP server" that goes in your config file.** The other four are **skills and plugins** — they install differently and live in different places. Knowing which is which saves you an hour of confusion.
 
