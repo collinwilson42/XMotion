@@ -57,7 +57,7 @@ There are nine pieces to your workstation, and they build on each other. By the 
 8. **Install the capture tool and take your first shots**  
     The XCopy tool is how you grab listing photos at full resolution into timestamped folders. You’ll run it from the terminal, confirm it works, then practice on a real Airbnb property — choosing one with strong walkthrough potential. This is the first real production step, and it feeds directly into the scoring system.
     
-9. **Give Claude access to your work folder & ** 
+9. **Give Claude access to your work folder & level up your toolset** 
     Finally, you’ll add a filesystem MCP server so Claude can read the captured images and the project files directly. That means you’ll be able to say “grade the thumbnails in today’s capture block” and Claude will do it without you uploading anything. That’s the bridge from setup into real work.
     
 
@@ -192,7 +192,7 @@ Prompt: "Using windows-mcp, check my C:\dev folder. I just extracted XMotion.zip
 Let's prove the power of the **Artifact** and **Windows MCP**: You installed Alacritty (a terminal). Ask Claude to restyle it and create a react artifact — paste this:
 
 ### Artifact
-Prompt 1: What hex colors would look good transparent background. Can you create a coherent color pallet with (#99FF99) as the primary and (#5f9EA0) as the secondary text for an alacrity toml config. Also, can you create a simple but abstract react artifact using the chosen colors on a glassmorphic background as if it were the alacrity panel."
+Prompt 1: What hex colors would look good on transparent background? Can you create a coherent color pallet with (#99FF99) as the primary and (#5f9EA0) as the secondary text and others for an alacrity toml config. Also, can you create a simple but abstract react artifact using the chosen colors on a glassmorphic background as if it were the alacrity panel."
 
 
 
