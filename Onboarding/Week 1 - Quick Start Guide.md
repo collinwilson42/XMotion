@@ -192,10 +192,9 @@ Prompt: "Using windows-mcp, check my C:\dev folder. I just extracted XMotion.zip
 Let's prove the power of the **Artifact** and **Windows MCP**: You installed Alacritty (a terminal). Ask Claude to restyle it and create a react artifact — paste this:
 
 ### Artifact
-Prompt 1: *I'm trying to find the right hex codes that would look good on on a transparent background. These are the colors i'm currently considering 
- (#99FF99) as the primary and (#5f9EA0) as the secondary text color can you create a simple but abstract react artifact using these two colors on a glasmophic background."
+Prompt 1: What hex colors would look good transparent background. Can you create a coherent color pallet with (#99FF99) as the primary and (#5f9EA0) as the secondary text for an alcritty toml. Also, can you create a simple but abstract react artifact using the chosen colors on a glassmorphic background as if it were the alacrity panel."
 
- **Verify what colors you want your panel text to be or search for hex codes based on your color preferences**
+
 
 ### Windows MCP 
 Prompt 2: *Using windows-mcp, please edit my Alacritty config file (`alacritty.toml`, usually in `%APPDATA%\alacritty\`). Set the window opacity to `0.33` and the text primary color to (#99FF99) and secondary text color to (#5f9EA0), "secondary" is dim_foreground (dimmed text). Create the file if it doesn't exist.*
