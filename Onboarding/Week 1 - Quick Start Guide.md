@@ -192,14 +192,14 @@ Prompt: "Using windows-mcp, check my C:\dev folder. I just extracted XMotion.zip
 Let's prove the power of the **Artifact** and **Windows MCP**: You installed Alacritty (a terminal). Ask Claude to restyle it and create a react artifact — paste this:
 
 ### Artifact
-Prompt 1: What hex colors would look good transparent background. Can you create a coherent color pallet with (#99FF99) as the primary and (#5f9EA0) as the secondary text for an alcritty toml. Also, can you create a simple but abstract react artifact using the chosen colors on a glassmorphic background as if it were the alacrity panel."
+Prompt 1: What hex colors would look good transparent background. Can you create a coherent color pallet with (#99FF99) as the primary and (#5f9EA0) as the secondary text for an alacrity toml config. Also, can you create a simple but abstract react artifact using the chosen colors on a glassmorphic background as if it were the alacrity panel."
 
 
 
 ### Windows MCP 
-Prompt 2: *Using windows-mcp, please edit my Alacritty config file (`alacritty.toml`, usually in `%APPDATA%\alacritty\`). Set the window opacity to `0.33` and the text primary color to (#99FF99) and secondary text color to (#5f9EA0), "secondary" is dim_foreground (dimmed text). Create the file if it doesn't exist.*
+Prompt 2: *Using windows-mcp, please edit my Alacritty config file (`alacritty.toml`, usually in `%APPDATA%\alacritty\`). Set the window opacity to `0.33` and the hex codes the same as the artifact.
 
-Open Alacritty afterward — it should be see-through with a soft green tint. You just edited a system config file without touching a line of code yourself. That's the workflow for everything from here.
+Open Alacritty afterward — you should see the custom layout design. You just edited a system config file without touching a line of code yourself. That's the workflow for everything from here.
 
 ### XCopy (Automation Tool)
 
@@ -253,18 +253,19 @@ Discovery is **your** job — you can browse and filter Airbnb in ways Claude ca
 - 15+ listing photos
 - A clear room-to-room flow that could animate into a smooth walkthrough
 
-Then bring your 9 to Claude with a quick one-line read on each, and let it pressure-test your picks:
+Then bring your 3 to Claude with a quick one-line read on each, and let it pressure-test your picks:
 
-> *"Below are 9 Airbnb listings I found as walkthrough candidates, each with my quick note. Check my read against our standard — open-plan or clearly connected, bright natural light, 15+ photos, clear room-to-room flow. Rank all 9 best to worst (1-99), tell me why for each, and tell me which to capture first. Don't score the equation yet — that comes after I capture."*
+> *"Below are 3 Airbnb listings I found as walkthrough candidates, each with my quick note. Check my read against our standard — open-plan or clearly connected, bright natural light, 15+ photos, clear room-to-room flow. Rank all 9 best to worst (1-99), tell me why for each, and tell me which to capture first. Don't score the equation yet — that comes after I capture."*
 >
 > *1. [link] — my note: …*
 > *2. [link] — my note: …*
-> *(…through 9)*
+> *3. [link] — my note: …*
+> 
 
 Claude ranks them; you capture the top picks with XCopy (Part 6).
 
 ### Loop 2 — Score a captured set
-Once you've captured a listing, Claude grades the real photos against our **Shot Quality Equation**. Here's the system in brief, so the numbers Claude gives you mean something:
+Once you've captured a listing, Claude automatically grades the real photos against our **Shot Quality Equation**. Here's the system in brief, so the numbers Claude gives you mean something:
 
 **How the scoring works (Image Scorer v2 — the current standard):**
 
