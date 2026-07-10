@@ -17,8 +17,6 @@ growth:
 
 # XMotion — Week 1 Quick Start Guide
 
-Welcome to the team,
-XMotion turns ordinary property photos into cinematic walkthrough videos that help listings sell — and you're getting in early, while we're still writing the playbook together. That's the best time to join anything.
 
 Here's the one thing to know before you start: **you do not need to be technical.** Your main tool is Claude, an AI assistant that can actually control your computer, set up software, and do the heavy lifting for you. Most of this guide is literally *copying a message, pasting it to Claude, and letting it work.* If something doesn't make sense, ask Claude — that's the whole point.
 
