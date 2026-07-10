@@ -7,13 +7,13 @@ domain: va-training
 status: live
 version: 1.2
 updated: 2026-07-10
-audience: XMotion VAs (Jaisa & Richlan)
+audience: XMotion VAs
 maintainer: XMotion
-signed: Collin 
+signed: Collin
 growth:
   - Add video generation loop once Higgsfield integration is stable
   - Build automated S‑value rotation and conversion tracking per the analytics pipeline
-  - Roll Power-Ups (Part 9) from optional to standard once claude-mem stability is confirmed on VA machines
+  - Roll Level-Ups (Part 9) from optional to standard once claude-mem stability is confirmed on VA machines
 ---
 
 # XMotion — Week 1 Quick Start Guide
@@ -31,7 +31,7 @@ Let's go.
 
 ## What you’re setting up this week
 
-There are nine pieces to your workstation, and they build on each other. By the end, you’ll have an AI assistant that can run your machine, a capture pipeline that grabs listing photos, and a scoring system that tells you if a property is ready to turn into a video. Everything below is done _with_ Claude, not instead of it — you’ll copy prompts and let the AI do the heavy lifting.
+There are nine pieces to your workstation, and they build on each other. By the end, you’ll have an AI assistant that can run your machine, a capture pipeline that grabs listing photos, and a scoring system that tells you if a property is ready to turn into a video. Everything below is done _with_ Claude — you’ll copy prompts and let the AI do the heavy lifting.
 
 1. **Install the core apps**  
     A one-command install of Claude, Obsidian, Alacritty, Node.js, Python, Git, and PowerToys. These are the only programs your machine needs for the whole XMotion workflow — nothing else to hunt down.
@@ -284,7 +284,6 @@ The bottom of the fraction alone is the **pre-shot gate**, called Set Degradatio
 
 The gate exists to protect credits: a FAIL block gets logged as abandoned and never generated, no matter how pretty individual photos are. Ambiguity is deliberately the dominant failure mode — a clean photo of a confusing space is more dangerous than a soft photo of a clear one, because the AI will confidently invent rooms that don't exist.
 
-> *(If you see old notes with scores like "SD = 2.83" — that's the retired 1–9 scale. Multiply by ~10 to translate: old 2.0 PASS ≈ new 20 PASS. Same verdicts, new numbers.)*
 
 Reference the skill files, then:
 
@@ -372,7 +371,7 @@ Notes on this block:
 
 **What it is:** A meta-skill that turns Claude into its own package manager. When you ask "is there a skill for X?" or "how do I do X?", it searches the open skills registry (skills.sh), checks quality signals like install counts and source reputation, and offers to install what it finds.
 
-**Install** (paste into a terminal):
+**Install** (paste into alacritty):
 ```
 npx skills add vercel-labs/skills --skill find-skills -g -y
 ```
