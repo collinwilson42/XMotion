@@ -189,7 +189,7 @@ Prompt: "Using windows-mcp, check my C:\dev folder. I just extracted XMotion.zip
 
 ## Part 5 — See what Claude can do (the fun one)
 
-Let's prove the power of the **Artifact** and **Windows MCP**: You installed Alacritty (a terminal). Ask Claude to restyle it and create a react artifact — paste this:
+Let's prove the power of the **Artifact** and **Windows MCP**: You installed Alacritty (a terminal). Ask Claude to restyle it and create an artifact — paste this:
 
 ### Artifact
 Prompt 1: What hex colors would look good on transparent background? Can you create a coherent color pallet with (#99FF99) as the primary and (#5f9EA0) as the secondary text and others for an alacrity toml config. Also, can you create a simple but abstract react artifact using the chosen colors on a glassmorphic background as if it were the alacrity panel."
